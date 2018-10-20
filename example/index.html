@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+
+    <!-- <link href="https://fonts.googleapis.com/css?subset=latin-ext&amp;family=Bitter:400,700|Roboto:400,500,700" rel="stylesheet" async> -->
+    <link rel="stylesheet" href="./basic-svg-styling.css">
+    <link rel="stylesheet" href="./page-style.css">
+
+</head>
+
+<body>
+    <main>
+        <section>
+            <h1>Example Curves</h1>
+            <div id="example-curves">
+                <svg viewBox="0 0 150 150" version="1.1" baseProfile="full" width="150" height="150" xmlns="http://www.w3.org/2000/svg" id="svg-container-a"></svg>
+                <svg viewBox="0 0 150 150" version="1.1" baseProfile="full" width="150" height="150" xmlns="http://www.w3.org/2000/svg" id="svg-container-b"></svg>
+                <svg viewBox="0 0 150 150" version="1.1" baseProfile="full" width="150" height="150" xmlns="http://www.w3.org/2000/svg" id="svg-container-c"></svg>
+            </div>
+        </section>
+
+        <input type="range" name="t-slider" id="t-slider" max="1" min="0" step="any" list="step-legend">
+
+        <datalist>
+            <option value="0" label="0" />
+            <option value="0.1" />
+            <option value="0.2" />
+            <option value="0.3" />
+            <option value="0.4" />
+            <option value="0.5" label="0.5" />
+            <option value="0.6" />
+            <option value="0.7" />
+            <option value="0.8" />
+            <option value="0.9" />
+            <option value="1" label="1" />
+        </datalist>
+    </main>
+    <script src="./path-gen.js" type="module"></script>
+</body>
+
+</html>

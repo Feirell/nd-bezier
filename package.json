@@ -1,0 +1,40 @@
+{
+  "name": "nd-bezier",
+  "version": "0.0.1",
+  "main": "./cjs/index.js",
+  "module": "./esm/index.js",
+  "scripts": {
+    "cjs": "tsc -p tsconfig-node.json",
+    "esm": "tsc -p tsconfig-web.json",
+    "build": "npm run cjs && npm run esm"
+  },
+  "repository": "https://github.com/Feirell/nd-bezier.git",
+  "author": "Florian Völker <Neirolf2030@web.de>",
+  "license": "MIT",
+  "private": false,
+  "devDependencies": {
+    "benchmark": "^2.1.4",
+    "benchmark-suite-formatter": "^1.0.0",
+    "microtime": "^2.1.8",
+    "typescript": "^3.1.3"
+  },
+  "files": [
+    "./esm/*",
+    "./cjs/*"
+  ],
+  "bugs": {
+    "url": "https://github.com/Feirell/nd-bezier/issues"
+  },
+  "keywords": [
+    "bezier",
+    "curve",
+    "spline",
+    "animation",
+    "interpolation",
+    "3d",
+    "2d"
+  ],
+  "dependencies": {
+    "linear-quadratic-cubic-eq-solver": "^0.0.2"
+  }
+}

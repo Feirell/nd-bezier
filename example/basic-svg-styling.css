@@ -1,0 +1,22 @@
+polyline,
+line {
+    fill: none;
+    stroke: black;
+}
+
+.line.intermidiate {
+    stroke: grey;
+}
+
+.point.intermidiate {
+    fill: grey;
+}
+
+.point.final {
+    fill: white;
+    stroke: grey;
+}
+
+.graph-parts {
+    stroke: rgba(200, 200, 200, 0.9);
+}
