@@ -1,10 +1,11 @@
 import {
     bc
 } from './math-functions';
+import { Point } from './Point';
 
-const fCache = [];
+const fCache: ((t: number, points: Point[]) => Point)[] = [];
 
-function produceGeneralAtFunction(grade) {
+function produceGeneralAtFunction(grade: number): (t: number, points: Point[]) => Point {
     if (fCache[grade] != undefined)
         return fCache[grade];
 
@@ -26,18 +27,23 @@ function produceGeneralAtFunction(grade) {
 
     let prog = "\"use strict\";const oneMinusT = 1 - t;" + multiplier + partXConst + partYConst + "return {x : partX ,y : partY};";
 
-    return fCache[grade] = new Function('t', 'points', prog);
+    return fCache[grade] = <(t: number) => Point>new Function('t', 'points', prog);
 }
 
-function ProducedGeneralBezier(points) {
-    this.points = points;
-    this.grade = points.length - 1;
+class ProducedGeneralBezier {
+    grade: number;
+    points: Point[];
 
-    produceGeneralAtFunction(this.grade);
-}
+    constructor(points: Point[]) {
+        this.points = points;
+        this.grade = points.length - 1;
 
-ProducedGeneralBezier.prototype.at = function at(t) {
-    return fCache[this.grade](t, this.points);
+        produceGeneralAtFunction(this.grade);
+    }
+
+    at(t: number): Point {
+        return fCache[this.grade](t, this.points);
+    }
 }
 
 export {

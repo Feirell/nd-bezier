@@ -1,8 +1,9 @@
 import {
     bc
 } from './math-functions';
+import { Point } from './Point';
 
-function produceSpecificAtFunction(points) {
+function produceSpecificAtFunction(points: Point[]): (t: number) => Point {
     const grade = points.length - 1;
     let multiplier = "";
 
@@ -23,12 +24,16 @@ function produceSpecificAtFunction(points) {
     partYConst += ";";
 
     const prog = "\"use strict\";const oneMinusT = 1 - t;" + multiplier + partXConst + partYConst + "return {x : partX ,y : partY};";
-    return new Function('t', prog);
+    return <(t: number) => Point>new Function('t', prog);
 }
 
-function ProducedSpezificBezier(points) {
-    this.at = produceSpecificAtFunction(points);
-};
+class ProducedSpezificBezier {
+    constructor(points: Point[]) {
+        this.at = produceSpecificAtFunction(points);
+    }
+
+    at(t: number): Point { return null; };
+}
 
 export {
     ProducedSpezificBezier
