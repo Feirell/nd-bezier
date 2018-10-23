@@ -1,4 +1,5 @@
-import { Point } from './Point';
+import { Point } from './point';
+
 import {
     bc
 } from './math-functions';
