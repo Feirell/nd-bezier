@@ -1,3 +1,5 @@
+import { Point } from './point';
+
 import {
     bc,
     pow,
@@ -5,7 +7,6 @@ import {
     pointOn,
     levelReverse
 } from './math-functions';
-import { Point } from './Point';
 
 class Bezier {
     grade: number;

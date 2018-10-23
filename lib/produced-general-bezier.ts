@@ -1,7 +1,8 @@
+import { Point } from './Point';
+
 import {
     bc
 } from './math-functions';
-import { Point } from './Point';
 
 const fCache: ((t: number, points: Point[]) => Point)[] = [];
 

@@ -1,7 +1,7 @@
+import { Point } from './Point';
 import {
     bc
 } from './math-functions';
-import { Point } from './Point';
 
 function produceSpecificAtFunction(points: Point[]): (t: number) => Point {
     const grade = points.length - 1;
