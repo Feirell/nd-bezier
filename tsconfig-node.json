@@ -3,7 +3,8 @@
     "target": "es6",
     "module": "commonjs",
     "declaration": true,
-    "outDir": "cjs"
+    "outDir": "cjs",
+    "strict": true
   },
   "files": [
     "./lib/index.ts"

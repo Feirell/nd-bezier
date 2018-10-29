@@ -28,7 +28,7 @@ function reverseFactorial(k: number) {
 }
 
 const bc = (function () {
-    const bcCache = [];
+    const bcCache: number[][] = [];
 
     /**
      * Calculates the binomial coefficient for n over k
@@ -74,7 +74,7 @@ function sum(n: number) {
  * 
  * @param k 
  */
-function reverseSum(k) {
+function reverseSum(k: number) {
     return Math.sqrt(2 * k + 0.25) - 0.5
 }
 
@@ -85,7 +85,7 @@ function reverseSum(k) {
  * @param a 
  * @param b 
  */
-function pointOn(t: number, a: Point, b) {
+function pointOn(t: number, a: Point, b: Point) {
     return {
         x: a.x + t * (b.x - a.x),
         y: a.y + t * (b.y - a.y)

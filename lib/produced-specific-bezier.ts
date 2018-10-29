@@ -33,7 +33,7 @@ class ProducedSpezificBezier {
         this.at = produceSpecificAtFunction(points);
     }
 
-    at(t: number): Point { return null; };
+    at(t: number): Point { return { x: NaN, y: NaN }; };
 }
 
 export {
