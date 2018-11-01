@@ -6,31 +6,19 @@ import {
 } from './math-functions';
 
 class NDBezier {
-    private _points: number[][] = [];
-    private _grade: number = NaN;
-    private _dimensions: number = NaN;
+    private points: number[][] = [];
+    private grade: number = NaN;
+    private dimensions: number = NaN;
 
     constructor(points: number[][]) {
-        this.points = points;
+        this.setPoints(points);
     }
 
-    set points(v: number[][]) {
+    setPoints(v: number[][]) {
         // one might want to implement some check that the correct form was used
-        this._points = v;
-        this._grade = v.length - 1;
-        this._dimensions = v[0].length;
-    }
-
-    get points(): number[][] {
-        return this._points;
-    }
-
-    get grade(): number {
-        return this._grade;
-    }
-
-    get dimensions(): number {
-        return this._dimensions;
+        this.points = v;
+        this.grade = v.length - 1;
+        this.dimensions = v[0].length;
     }
 
     at(t: number): number[] {
@@ -41,15 +29,13 @@ class NDBezier {
         const dimensions = this.dimensions;
 
         const retValue = new Array(dimensions);
-        for (let d = 0; d < dimensions; d++)
-            retValue[d] = 0;
 
         for (let i = 0; i <= grade; i++) {
             const currentMultiplier = bc(grade, i) * pow(t, i) * pow(oneMinusT, grade - i)
             const point = points[i];
 
             for (let d = 0; d < dimensions; d++)
-                retValue[d] += point[d] * currentMultiplier;
+                retValue[d] = (retValue[d] || 0) + point[d] * currentMultiplier;
         }
 
         return retValue;
