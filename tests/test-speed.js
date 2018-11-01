@@ -6,7 +6,7 @@ const {
     CubicBezier,
     NDBezier,
     ProducedBezier
-} = require('./');
+} = require('../'); // since an directory with an package.json is an package
 
 const points = [
     [1, 5],

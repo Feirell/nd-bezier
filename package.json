@@ -6,7 +6,8 @@
   "scripts": {
     "cjs": "tsc -p tsconfig-node.json",
     "esm": "tsc -p tsconfig-web.json",
-    "build": "npm run cjs && npm run esm"
+    "build": "npm run cjs && npm run esm",
+    "speed": "node ./tests/test-speed.js"
   },
   "repository": "https://github.com/Feirell/nd-bezier.git",
   "author": "Florian Völker <Neirolf2030@web.de>",
