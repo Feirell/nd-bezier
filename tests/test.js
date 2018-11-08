@@ -6,8 +6,12 @@ const {
 
 describe('Bezier', function () {
     describe('#constructor()', function () {
-        it('[]', function () {
-            assert.ok((new Bezier([])) instanceof Bezier);
+        it('new Bezier() throws', function () {
+            assert.throws(() => new Bezier());
+        });
+
+        it('new Bezier([]) instanceof Bezier', function () {
+            assert((new Bezier([])) instanceof Bezier);
         });
     });
 });
