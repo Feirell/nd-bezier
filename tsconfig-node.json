@@ -1,12 +1,7 @@
 {
-  "compilerOptions": {
-    "target": "es6",
-    "module": "commonjs",
-    "declaration": true,
-    "outDir": "cjs",
-    "strict": true
-  },
-  "files": [
-    "./lib/index.ts"
-  ]
+    "extends": "./tsconfig.json",
+    "compilerOptions": {
+        "module": "commonjs",
+        "outDir": "cjs"
+    }
 }

@@ -1,12 +1,7 @@
 {
-  "compilerOptions": {
-    "target": "es6",
-    "module": "es2015",
-    "declaration": true,
-    "outDir": "esm",
-    "strict": true
-  },
-  "files": [
-    "./lib/index.ts"
-  ]
+    "extends": "./tsconfig.json",
+    "compilerOptions": {
+        "module": "es2015",
+        "outDir": "esm"
+    }
 }
