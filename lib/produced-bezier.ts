@@ -322,35 +322,23 @@ const SPECIFIC = 'specific';
 
 class ProducedBezier {
     readonly points: number[][] = [];
-    readonly functionType: string;
 
     constructor(points: number[][], type = SPECIFIC) {
         this.points = points;
-        this.functionType = type != GENERIC ? SPECIFIC : GENERIC;
+        // this.functionType = type != GENERIC ? SPECIFIC : GENERIC;
+
+        if (type == GENERIC) {
+            const fnc = produceGenericAtFunction(points.length - 1, points[0].length);
+
+            this.at = fnc.bind(null, points);
+        } else {
+            this.at = produceSpecificAtFunction(points);
+        }
+
     }
 
     at(t: number): number[] {
-        // replacing the at methode and returning its return value
-        delete this.at;
-
-        // the reason for the two types is their creation speed
-        // for an already created generic one it is about 4'563k creations/sec
-        // for an generic one it is around 230k creations/sec
-        switch (this.functionType) {
-            case SPECIFIC:
-                this.at = produceSpecificAtFunction(this.points);
-                break;
-            case GENERIC:
-                const points = this.points;
-                const fnc = produceGenericAtFunction(this.points.length - 1, this.points[0].length);
-
-                this.at = t => fnc(points, t);
-                break;
-            default:
-                throw new Error('type needs to be either "specific" or "general" but was ' + this.functionType);
-        }
-
-        return this.at(t);
+        return [];
     };
 }
 

@@ -69,6 +69,8 @@ function createAndRunSuite(tests, resultCallback) {
     return suite;
 }
 
+
+// 425,000,000 hz with one core
 // testAllCLIArguments();
 
 const creationTimings = {
@@ -142,3 +144,85 @@ creationSuite.on('complete', () => {
 creationSuite.run({
     'async': true
 });
+
+// const t = 3;
+
+// const functionCache = [];
+
+// function getFunc(a, b) {
+//     return () => {};
+// if (functionCache[a] != undefined) {
+//     if (functionCache[a][b] != undefined)
+//         return functionCache[a][b];
+// } else {
+//     functionCache[a] = [];
+// }
+
+
+// return functionCache[a][b] = (e) => {
+//     return 'dddd' + e;
+// };
+// }
+
+// function getFunction() {
+//     return () => {};
+// }
+
+// const getArrow = () => {
+//     return () => {};
+// };
+
+// class TestClass {
+//     constructor(v) {
+//         if (v)
+//             this.methode = getFunction();
+//         else
+//             this.methode = getArrow();
+//     }
+// }
+
+// let k = 0;
+// const tests = {
+//     // 'with function': () => {
+//     //     new TestClass(true)
+//     // },
+//     // 'with arrow': () => {
+//     //     new TestClass(false)
+//     // }
+
+//     '1e5': () => {
+//         let i = 1e7;
+
+//         while (i-- > 0) Math.random();
+//     },
+//     '1e2': () => {
+//         let i = 1e2;
+//         if (((k++) % 2) == 0) {
+//             i = 1e7;
+//             // console.log('pushed i')
+//         }
+//         // else console.log('did not pushed i')
+
+
+//         while (i-- > 0) Math.random();
+//     }
+// }
+
+// const creationSuite = createAndRunSuite(tests, str => {
+//     // console.clear();
+//     console.log(str);
+// })
+
+// creationSuite.run({
+//     'async': true
+// });
+
+
+
+// creationSuite.on('complete', () => {
+//     console.log('k', k)
+//     console.log(creationSuite.map(b => ({
+//         name: b.name,
+//         samples: b.stats.sample
+//     })));
+// })
