@@ -1,4 +1,4 @@
-import { AT_FUNCTIONS, TSEARCH_FUNCTIONS, AT_FUNCTIONS_NAMES, UsableFunction, AtFunction, TSearchFunction, BezierProperties } from './at-tserach-functions'
+import { AT_FUNCTIONS, TSEARCH_FUNCTIONS, AT_FUNCTIONS_NAMES, UsableFunction, AtFunction, TSearchFunction, BezierProperties } from './at-tsearch-functions'
 export { AT_FUNCTIONS_NAMES };
 
 export class Bezier {
