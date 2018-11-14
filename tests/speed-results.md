@@ -16,3 +16,20 @@ ProducedBezier Specific 694,696,764 ± 0.34%      91
               ND Bezier   2,546,229 ± 0.57%      89
            Cubic Bezier  19,353,505 ± 0.63%      91
 ```
+
+```text
+Creation speed
+            name ops/sec     MoE samples
+ produce-generic 401,126 ± 0.59%      92
+produce-specific 150,801 ± 0.42%      96
+     nd-iterativ 377,414 ± 0.68%      91
+        nd-cubic 418,826 ± 0.44%      92
+     2d-iterativ 400,586 ± 0.43%      94
+At speed
+            name    ops/sec     MoE samples
+ produce-generic  3,522,472 ± 0.44%      95
+produce-specific 30,702,477 ± 0.39%      95
+     nd-iterativ  1,936,785 ± 0.58%      92
+        nd-cubic  3,526,484 ± 0.52%      93
+     2d-iterativ  3,239,002 ± 0.54%      98
+```

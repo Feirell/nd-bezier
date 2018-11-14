@@ -3,9 +3,7 @@ const formatter = require('benchmark-suite-formatter');
 
 const {
     Bezier,
-    CubicBezier,
-    NDBezier,
-    ProducedBezier
+    AT_FUNCTIONS_NAMES
 } = require('../'); // since an directory with an package.json is an package
 
 const points = [
@@ -14,18 +12,6 @@ const points = [
     [3, 7],
     [4, 8]
 ]
-
-// global.Bezier = Bezier;
-
-bezier = new Bezier(points);
-ndbezier = new NDBezier(points);
-cubicBezier = new CubicBezier(points);
-producedBezierGeneric = new ProducedBezier(points, 'generic');
-producedBezierSpecific = new ProducedBezier(points, 'specific');
-
-// to create the at Functions
-producedBezierGeneric.at(0);
-producedBezierSpecific.at(0);
 
 function testAllCLIArguments() {
     const args = Array.prototype.slice.call(process.argv, 2).map(n => parseFloat(n));
@@ -72,50 +58,19 @@ function createAndRunSuite(tests, resultCallback) {
 
 // 425,000,000 hz with one core
 // testAllCLIArguments();
+const creationTimings = {};
+const atTimings = {};
 
-const creationTimings = {
-    'ProducedBezier Generic ': () => {
-        const producedBezierGeneric = new ProducedBezier(points, 'generic');
-        producedBezierGeneric.at(0.3);
-    },
-
-    'ProducedBezier Specific': () => {
-        const producedBezierSpecific = new ProducedBezier(points, 'specific');
-        producedBezierSpecific.at(0.3);
-    },
-
-    'Bezier': () => {
-        const bezier = new Bezier(points);
-    },
-
-    'ND Bezier': () => {
-        const ndbezier = new NDBezier(points);
-    },
-
-    'Cubic Bezier': () => {
-        const cubicBezier = new CubicBezier(points);
+for (let name of AT_FUNCTIONS_NAMES) {
+    creationTimings[name] = () => {
+        (new Bezier(points, name)).at(0);
     }
-}
 
-const atTimings = {
-    'ProducedBezier Generic ': () => {
-        producedBezierGeneric.at(0.3);
-    },
-
-    'ProducedBezier Specific': () => {
-        producedBezierSpecific.at(0.3);
-    },
-
-    'Bezier': () => {
-        bezier.at(0.3);
-    },
-
-    'ND Bezier': () => {
-        ndbezier.at(0.3);
-    },
-
-    'Cubic Bezier': () => {
-        cubicBezier.at(0.3);
+    {
+        const instance = new Bezier(points, name);
+        atTimings[name] = () => {
+            instance.at(0.3);
+        }
     }
 }
 

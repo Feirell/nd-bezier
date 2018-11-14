@@ -1,1 +1,1 @@
-export { default as default } from './bezier';
+export * from './bezier';

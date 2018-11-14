@@ -2,7 +2,8 @@
     "compilerOptions": {
         "target": "es6",
         "declaration": true,
-        "strict": true
+        "strict": true,
+        "removeComments": true,
     },
     "files": [
         "./lib/index.ts"

@@ -1,6 +1,7 @@
-import { AT_FUNCTIONS, TSEARCH_FUNCTIONS, UsableFunction, AtFunction, TSearchFunction, BezierProperties } from './at-tserach-functions';
+import { AT_FUNCTIONS, TSEARCH_FUNCTIONS, AT_FUNCTIONS_NAMES, UsableFunction, AtFunction, TSearchFunction, BezierProperties } from './at-tserach-functions'
+export { AT_FUNCTIONS_NAMES };
 
-export default class Bezier {
+export class Bezier {
     private points: number[][] | null = null;
     private dimension: number | null = null;
     private grade: number | null = null;
@@ -13,7 +14,7 @@ export default class Bezier {
 
     private bezierProperties: BezierProperties | null = null;
 
-    constructor(points?: number[][], atFunctionGen: string | UsableFunction<AtFunction> = 'ex', tSearchFunctionGen: string | UsableFunction<TSearchFunction> = 'ex') {
+    constructor(points?: number[][], atFunctionGen: string | UsableFunction<AtFunction> = 'nd-iterativ', tSearchFunctionGen: string | UsableFunction<TSearchFunction> = 'ex') {
         if (points != null)
             this.setPoints(points);
 

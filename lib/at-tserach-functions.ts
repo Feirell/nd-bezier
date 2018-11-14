@@ -1,11 +1,9 @@
 import {
     bc,
-    pow,
-    sum,
-    levelReverse
+    pow
 } from './math-functions';
 
-import Bezier from './bezier';
+import { Bezier } from './bezier';
 
 export interface BezierProperties {
     points: number[][];
@@ -47,17 +45,25 @@ export type TSearchFunction = (bezierProperties: BezierProperties, value: number
 
 const AT_FUNCTIONS: { [key: string]: UsableFunction<AtFunction> } = {}
 
+/**
+ * caching the created generic functions and its body and its pointsPositions
+ */
 const fCache: ({
     body: string,
     func: AtFunction,
-    // an array of the textual point positions and the surrounding string, used for replacement in produceSpecificAtFunction
+    /** an array of the textual point positions and the surrounding string, used for replacement in produceSpecificAtFunction*/
     pointsPositions?: ({
         point: number,
-        // the number d of point[p][d]
+        /** the number d of point[p][d] */
         dimension: number
     } | string)[],
 })[][] = [];
 
+/**
+ * This function generates an general at function which is useable for this specific cimbination of grade and dimension.
+ * 
+ * @param param0 
+ */
 function produceGenericAtFunction({ grade, dimension }: BezierProperties): AtFunction {
     grade--;
 
@@ -122,8 +128,8 @@ function produceGenericAtFunction({ grade, dimension }: BezierProperties): AtFun
     }
     arrLiteral = "[" + arrLiteral + "]";
 
-    const body = "\"use strict\";\nconst oneMinusT = 1 - t;\nconst rePoint = " + arrLiteral + ";\n" + multiplier + pointSumConcat + "return rePoint;";
-    const func = <AtFunction>new Function('{points}', 't', body);
+    const body = "\"use strict\";const points = bezierProperties.points;\nconst oneMinusT = 1 - t;\nconst rePoint = " + arrLiteral + ";\n" + multiplier + pointSumConcat + "return rePoint;";
+    const func = <AtFunction>new Function('bezierProperties', 't', body);
 
     fCache[grade][dimension] = {
         body, func
@@ -132,6 +138,19 @@ function produceGenericAtFunction({ grade, dimension }: BezierProperties): AtFun
     return func;
 }
 
+AT_FUNCTIONS['produce-generic'] = {
+    name: 'produce-generic',
+    generate(b) {
+        const bezierProperties = b.getBezierProperties();
+        if (bezierProperties == null)
+            throw new Error('produce-generic need to be called with an bezier which has valid points');
+
+        return produceGenericAtFunction(bezierProperties);
+    },
+    shouldReset(g, d, p) {
+        return g || d;
+    }
+}
 
 /*
 from: 
@@ -203,6 +222,8 @@ function getPlaces(str: string) {
 }
 
 /**
+ * This functions produces an specific at function which is created for an individual identity of points.
+ * 
  * Speed differences:
  * - Building the whole body for each function: 140k ops/sec
  * - Using RegEx: 130k ops/sec
@@ -312,7 +333,7 @@ const nDCubic = ({ points, dimension }: BezierProperties, t: number) => {
 AT_FUNCTIONS['nd-cubic'] = {
     name: 'nd-cubic',
     generate(b) {
-        return b.getGrade() == 3 ? nDCubic : null;
+        return b.getGrade() == 4 ? nDCubic : null;
     },
     shouldReset(g, d, p) {
         return g;
@@ -376,4 +397,7 @@ for (let key in AT_FUNCTIONS)
 for (let key in TSEARCH_FUNCTIONS)
     TSEARCH_FUNCTIONS[key].name = key;
 
-export { AT_FUNCTIONS, TSEARCH_FUNCTIONS }
+
+const AT_FUNCTIONS_NAMES = Object.freeze(Object.keys(AT_FUNCTIONS));
+
+export { AT_FUNCTIONS, TSEARCH_FUNCTIONS, AT_FUNCTIONS_NAMES }
