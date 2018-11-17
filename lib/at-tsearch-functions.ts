@@ -138,12 +138,12 @@ function produceGenericAtFunction({ grade, dimension }: BezierProperties): AtFun
     return func;
 }
 
-AT_FUNCTIONS['produce-generic'] = {
-    name: 'produce-generic',
+AT_FUNCTIONS['produced-generic'] = {
+    name: 'produced-generic',
     generate(b) {
         const bezierProperties = b.getBezierProperties();
         if (bezierProperties == null)
-            throw new Error('produce-generic need to be called with an bezier which has valid points');
+            throw new Error('produced-generic need to be called with an bezier which has valid points');
 
         return produceGenericAtFunction(bezierProperties);
     },
@@ -263,12 +263,12 @@ function produceSpecificAtFunction({ points, dimension, grade }: BezierPropertie
     return <AtFunction>new Function('bezierProperties', 't', newFuncBody);
 }
 
-AT_FUNCTIONS['produce-specific'] = {
-    name: 'produce-specific',
+AT_FUNCTIONS['produced-specific'] = {
+    name: 'produced-specific',
     generate(b) {
         const bezierProperties = b.getBezierProperties();
         if (bezierProperties == null)
-            throw new Error('produce-specific need to be called with an bezier which has valid points');
+            throw new Error('produced-specific need to be called with an bezier which has valid points');
 
         return produceSpecificAtFunction(bezierProperties);
     },
