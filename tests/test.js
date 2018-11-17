@@ -27,6 +27,15 @@ describe('Bezier', function () {
                 assert(inRange(res[0], 1.468) && inRange(res[1], 0.936));
             });
 
+            it('bezier.at(0) ≈ [1, 0]', function () {
+                const res = bezier.at(0);
+                assert(inRange(res[0], 1) && inRange(res[1], 0));
+            });
+
+            it('bezier.at(1) ≈ [2, 2]', function () {
+                const res = bezier.at(1);
+                assert(inRange(res[0], 2) && inRange(res[1], 2));
+            });
         })
     }
 });

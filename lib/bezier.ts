@@ -2,17 +2,10 @@ import { AT_FUNCTIONS, TSEARCH_FUNCTIONS, AT_FUNCTIONS_NAMES, UsableFunction, At
 export { AT_FUNCTIONS_NAMES };
 
 export class Bezier {
-    private points: number[][] | null = null;
-    private dimension: number | null = null;
-    private grade: number | null = null;
+    private points: null | BezierProperties = null;
 
-    private atGenerator: UsableFunction<AtFunction> | null = null;
-    private atFunction: AtFunction | null = null;
-
-    private tSearchGenerator: UsableFunction<TSearchFunction> | null = null;
-    private tSearchFunction: TSearchFunction | null = null;
-
-    private bezierProperties: BezierProperties | null = null;
+    private atGenerator!: UsableFunction<AtFunction>;
+    private tSearchGenerator!: UsableFunction<TSearchFunction>;
 
     constructor(points?: number[][], atFunctionGen: string | UsableFunction<AtFunction> = 'nd-iterativ', tSearchFunctionGen: string | UsableFunction<TSearchFunction> = 'ex') {
         if (points != null)
@@ -22,17 +15,25 @@ export class Bezier {
         this.setTSearchFunction(tSearchFunctionGen);
     }
 
-    public copyPoints(): number[][] | null {
-        const po = this.points;
+    public getBezierProperties(): null | BezierProperties {
+        return this.points == null ? null : {
+            dimension: this.points.dimension,
+            grade: this.points.grade,
+            points: this.points.points
+        };
+    }
 
-        if (po == null)
+    public copyPoints(): number[][] | null {
+        if (this.points == null)
             return null;
 
-        const copy: number[][] = <any>new Array(this.grade);
+        const po = this.points.points;
+
+        const copy: number[][] = <any>new Array(this.points.grade);
 
         for (let g = 0; g < po.length; g++) {
             const curr = po[g];
-            const c = copy[g] = <any>new Array(this.dimension);
+            const c = copy[g] = <any>new Array(this.points.dimension);
             for (let d = 0; d < curr[d]; d++)
                 c[d] = curr[d];
         }
@@ -41,29 +42,15 @@ export class Bezier {
     }
 
     public getPoints() {
-        return this.points;
+        return this.points == null ? null : this.points.points;
     }
 
     public getGrade() {
-        return this.grade;
+        return this.points == null ? null : this.points.grade;
     }
 
     public getDimension() {
-        return this.dimension;
-    }
-
-    public getBezierProperties(): BezierProperties | null {
-        if (this.points == null || this.grade == null || this.dimension == null)
-            return null;
-
-        if (this.bezierProperties == null)
-            this.bezierProperties = Object.freeze({
-                points: this.points,
-                dimension: this.dimension,
-                grade: this.grade
-            });
-
-        return this.bezierProperties;
+        return this.points == null ? null : this.points.dimension;
     }
 
     public setPoints(points: number[][]) {
@@ -74,8 +61,11 @@ export class Bezier {
 
         const dimension = points[0].length;
 
-        const dimensionEqual = this.dimension == dimension;
-        const gradeEqual = this.grade == grade;
+        const pRef = this.points != null ? this.points : this.points = <any>{};
+
+        const dimensionEqual = pRef.dimension == dimension;
+        const gradeEqual = pRef.grade == grade;
+
         let pointsEqual = dimensionEqual && gradeEqual;
 
         const copy = new Array(grade);
@@ -88,7 +78,7 @@ export class Bezier {
                     throw new TypeError('setPoints was called with an points structure which did not fit into the specification: points[' + g + '][' + d + '] = ' + val + ' which is not finite');
 
                 if (pointsEqual)
-                    pointsEqual = val == (<any>this.points)[g][d]; // have to convince typscript that this.points is not null (if points equal is true the check above succeeded)
+                    pointsEqual = val == pRef.points[g][d];
 
                 c[d] = val;
             }
@@ -99,52 +89,48 @@ export class Bezier {
 
         // checking whether the given functions should be reseted
         if (!pointsEqual) {
-            this.bezierProperties = null;
+            if (this.atGenerator != null && this.atGenerator.shouldReset(gradeEqual, dimensionEqual, pointsEqual))
+                this.at = this.atToReproduce;
 
-            if (this.atGenerator != null && this.atFunction != null && this.atGenerator.shouldReset(gradeEqual, dimensionEqual, pointsEqual))
-                this.atFunction = null;
-
-            if (this.tSearchGenerator != null && this.tSearchFunction != null && this.tSearchGenerator.shouldReset(gradeEqual, dimensionEqual, pointsEqual))
-                this.tSearchFunction = null;
+            if (this.tSearchGenerator != null && this.tSearchGenerator.shouldReset(gradeEqual, dimensionEqual, pointsEqual))
+                this.tSearch = this.tSearchReproduce;
         }
 
-        this.dimension = dimension;
-        this.grade = grade;
-        this.points = copy;
+        pRef.dimension = dimension;
+        pRef.grade = grade;
+        pRef.points = copy;
     }
 
     public isInjective(dimension: number): boolean | undefined {
         if (this.points == null)
             return undefined;
 
-        if (dimension > (<any>this.dimension) - 1)
-            throw new Error('the given dimension ' + dimension + ' is greater than the dimension ' + this.dimension + ' of this bezier')
+        if (dimension > this.points.dimension - 1)
+            throw new Error('the given dimension ' + dimension + ' is greater than the dimension ' + this.points.dimension + ' of this bezier')
 
-        let prev = this.points[0][dimension];
-        for (let g = 1; g < (<any>this.grade); g++)
-            if (this.points[g][dimension] <= prev)
+        let prev = this.points.points[0][dimension];
+        for (let g = 1; g < this.points.grade; g++)
+            if (this.points.points[g][dimension] <= prev)
                 return false;
             else
-                prev = this.points[g][dimension];
+                prev = this.points.points[g][dimension];
 
         return true;
     }
 
-    public at(t: number): number[] {
-        // (<UsableFunction<AtFunction>><any>this.atGenerator) is used to tell typscript that this.atGenerator will not be null (since the constructor sets it)
+    public at(t: number): number[] { throw new Error('no at function set'); }
 
-        if (this.atFunction == null) {
-            this.atFunction = (<UsableFunction<AtFunction>><any>this.atGenerator).generate(this);
-
-            if (this.atFunction == null)
-                throw new Error('can not use the given at function "' + (<UsableFunction<AtFunction>><any>this.atGenerator).name + '" for this bezier [grade: ' + this.grade + ', dimension: ' + this.dimension + ']');
-        }
-
-        const props = this.getBezierProperties();
-        if (props == null)
+    private atToReproduce(t: number): number[] {
+        if (this.points == null)
             throw new Error('no points are set');
 
-        return this.atFunction(props, t);
+        const atFunction = this.atGenerator.generate(this);
+
+        if (atFunction == null)
+            throw new Error('can not use the given at function "' + this.atGenerator.name + '" for this bezier [grade: ' + this.points.grade + ', dimension: ' + this.points.dimension + ']');
+
+
+        return (this.at = atFunction.bind(null, this.points))(t);
     }
 
     public setAtFunction(generator: UsableFunction<AtFunction> | string) {
@@ -158,24 +144,21 @@ export class Bezier {
             return;
 
         this.atGenerator = generator;
-        this.atFunction = null;
+        this.at = this.atToReproduce;
     }
 
-    public tSearch(value: number, dimension: number): number {
-        // (<UsableFunction<AtFunction>><any>this.atGenerator) is used to tell typscript that this.atGenerator will not be null (since the constructor sets it)
+    public tSearch(value: number, dimension: number): number { throw new Error('no tSearch function set'); }
 
-        if (this.tSearchFunction == null) {
-            this.tSearchFunction = (<UsableFunction<TSearchFunction>><any>this.tSearchGenerator).generate(this);
-
-            if (this.tSearchFunction == null)
-                throw new Error('can not use the given tSearch function "' + (<UsableFunction<TSearchFunction>><any>this.tSearchGenerator).name + '" for this bezier [grade: ' + this.grade + ', dimension: ' + this.dimension + ']');
-        }
-
-        const props = this.getBezierProperties();
-        if (props == null)
+    private tSearchReproduce(value: number, dimension: number): number {
+        if (this.points == null)
             throw new Error('no points are set');
 
-        return this.tSearchFunction(props, value, dimension);
+        const tSearchFunction = this.tSearchGenerator.generate(this);
+
+        if (tSearchFunction == null)
+            throw new Error('can not use the given tSearch function "' + this.tSearchGenerator.name + '" for this bezier [grade: ' + this.points.grade + ', dimension: ' + this.points.dimension + ']');
+
+        return (this.tSearch = tSearchFunction.bind(this.points))(value, dimension);
     }
 
     public setTSearchFunction(generator: string | UsableFunction<TSearchFunction>) {
@@ -189,6 +172,6 @@ export class Bezier {
             return;
 
         this.tSearchGenerator = generator;
-        this.tSearchFunction = null;
+        this.tSearch = this.tSearchReproduce;
     }
 }
