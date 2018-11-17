@@ -1,5 +1,3 @@
-import { Point } from './point';
-
 const factorial = (function () {
     const factorialCache = [1, 1, 2, 6, 24, 120, 720, 5040, 40320, 362880, 3628800, 39916800, 479001600, 6227020800, 87178291200, 1307674368000, 20922789888000, 355687428096000, 6402373705728000];
 
@@ -79,20 +77,6 @@ function reverseSum(k: number) {
 }
 
 /**
- * Calculates the point on an an line defined by a and b
- * 
- * @param t 
- * @param a 
- * @param b 
- */
-function pointOn(t: number, a: Point, b: Point) {
-    return {
-        x: a.x + t * (b.x - a.x),
-        y: a.y + t * (b.y - a.y)
-    }
-}
-
-/**
  * Shorthand for Math.pow
  * @param n 
  * @param k 
@@ -153,7 +137,6 @@ export {
     reverseFactorial,
     sum,
     reverseSum,
-    pointOn,
     pow,
     level,
     levelReverse
