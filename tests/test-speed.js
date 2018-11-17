@@ -1,5 +1,4 @@
-const Benchmark = require('benchmark');
-const formatter = require('benchmark-suite-formatter');
+const { TestGroup } = require('./test-group.js');
 
 const {
     Bezier,
@@ -11,110 +10,36 @@ const points = [
     [2, 6],
     [3, 7],
     [4, 8]
-]
+];
 
-function testAllCLIArguments() {
-    const args = Array.prototype.slice.call(process.argv, 2).map(n => parseFloat(n));
+const arrayCopy = (inst, off = 0) => Array.prototype.slice.call(inst, off);
+const args = arrayCopy(process.argv, 2);
 
-    function testOutput(t) {
-        console.log("t: %d => \n  Bezier:\n  %o \n  ProducedBezier Spez.:\n  %o\n  ProducedBezier Gen.:\n  %o", t, bezier.at(t), producedSpecificNDBezierSpecific.at(t), producedSpecificNDBezierGeneric.at(t));
+new TestGroup('create-at', AT_FUNCTIONS_NAMES, name => {
+    return () => (new Bezier(points, name)).at(0);
+});
+
+new TestGroup('at', AT_FUNCTIONS_NAMES, name => {
+    const instance = new Bezier(points, name);
+    return () => {
+        instance.at(0.3);
     }
+});
 
-    for (let n of args)
-        testOutput(n);
+const matcher = /--([a-z-]+)=(.+)/;
 
-    process.exit();
-};
+for (let arg of args) {
+    const m = matcher.exec(arg);
 
-function createAndRunSuite(tests, resultCallback) {
-    const suite = new Benchmark.Suite();
-
-    function wrapTest(func) {
-        return function () {
-            try {
-                func()
-            } catch (e) {
-                console.error('%s threw an error\n', func.name, e);
-                process.exit();
-            }
-        }
-    }
-
-    for (let k in tests)
-        suite.add(k, wrapTest(tests[k]));
-
-    suite.on('cycle', () => {
-        resultCallback(formatter.stringifySuite(suite));
-    })
-
-    suite.on('error', (err) => console.error(err.target.compiled.toString(), err.target.error));
-
-
-
-    resultCallback(formatter.stringifySuite(suite));
-    return suite;
-}
-
-
-// 425,000,000 hz with one core
-// testAllCLIArguments();
-const creationTimings = {};
-const atTimings = {};
-
-for (let name of AT_FUNCTIONS_NAMES) {
-    creationTimings[name] = () => {
-        (new Bezier(points, name)).at(0);
-    }
-
-    {
-        const instance = new Bezier(points, name);
-        atTimings[name] = () => {
-            instance.at(0.3);
+    if (m == null) {
+        for (let group of TestGroup.getAllGroups())
+            group.addFilterString(arg);
+    } else {
+        let group = TestGroup.getGroupByName(m[1]);
+        if (group) {
+            group.addFilterString(m[2]);
         }
     }
 }
 
-const output = [
-    "Creation speed\n",
-    "",
-    "\nAt speed\n",
-    ""
-]
-
-function printOutput() {
-    console.clear();
-    console.log(output.join(''));
-}
-
-function logger(index, str) {
-    output[index] = str;
-    printOutput();
-}
-
-function logBothSuites() {
-    output[1] = formatter.stringifySuite(creationSuite);
-    output[3] = formatter.stringifySuite(atSuite);
-    printOutput();
-}
-
-const creationSuite = createAndRunSuite(creationTimings, logger.bind(null, 1));
-const atSuite = createAndRunSuite(atTimings, logger.bind(null, 3))
-
-const timeoutID = setInterval(() => {
-    logBothSuites();
-}, 75);
-
-creationSuite.on('complete', () => {
-    atSuite.run({
-        'async': true
-    });
-});
-
-atSuite.on('complete', () => {
-    clearInterval(timeoutID);
-    logBothSuites();
-})
-
-creationSuite.run({
-    'async': true
-});
+TestGroup.testAllGroups();
