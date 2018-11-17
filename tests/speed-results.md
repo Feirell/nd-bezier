@@ -33,3 +33,21 @@ produce-specific 30,702,477 ± 0.39%      95
         nd-cubic  3,526,484 ± 0.52%      93
      2d-iterativ  3,239,002 ± 0.54%      98
 ```
+
+```
+create-at
+             name ops/sec     MoE samples
+ produced-generic 430,469 ± 0.47%      90
+produced-specific 143,194 ± 0.49%      89
+      nd-iterativ 402,654  ± 1.4%      93
+         nd-cubic 449,023  ± 0.3%      93
+      2d-iterativ 439,093 ± 0.39%      91
+
+at
+             name    ops/sec     MoE samples
+ produced-generic  3,621,272 ± 0.39%      92
+produced-specific 34,888,106 ± 0.34%      90
+      nd-iterativ  2,026,051  ± 0.4%      91
+         nd-cubic  3,620,254 ± 0.28%      92
+      2d-iterativ  3,279,738 ± 0.26%      91
+```
