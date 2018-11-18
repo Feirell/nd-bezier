@@ -1,5 +1,5 @@
-import { AT_FUNCTIONS, TSEARCH_FUNCTIONS, AT_FUNCTIONS_NAMES, UsableFunction, AtFunction, TSearchFunction, BezierProperties } from './at-tsearch-functions'
-export { AT_FUNCTIONS_NAMES };
+import { AT_FUNCTIONS, TSEARCH_FUNCTIONS, AT_FUNCTIONS_NAMES, TSEARCH_FUNCTIONS_NAMES, UsableFunction, AtFunction, TSearchFunction, BezierProperties } from './at-tsearch-functions'
+export { AT_FUNCTIONS_NAMES, TSEARCH_FUNCTIONS_NAMES };
 
 export class Bezier {
     private points: null | BezierProperties = null;
@@ -7,7 +7,7 @@ export class Bezier {
     private atGenerator!: UsableFunction<AtFunction>;
     private tSearchGenerator!: UsableFunction<TSearchFunction>;
 
-    constructor(points?: number[][], atFunctionGen: string | UsableFunction<AtFunction> = 'nd-iterativ', tSearchFunctionGen: string | UsableFunction<TSearchFunction> = 'ex') {
+    constructor(points?: number[][], atFunctionGen: string | UsableFunction<AtFunction> = AT_FUNCTIONS_NAMES[0], tSearchFunctionGen: string | UsableFunction<TSearchFunction> = TSEARCH_FUNCTIONS_NAMES[0]) {
         if (points != null)
             this.setPoints(points);
 
@@ -102,18 +102,23 @@ export class Bezier {
     }
 
     public isInjective(dimension: number): boolean | undefined {
-        if (this.points == null)
+        const p = this.points;
+        if (p == null)
             return undefined;
 
-        if (dimension > this.points.dimension - 1)
-            throw new Error('the given dimension ' + dimension + ' is greater than the dimension ' + this.points.dimension + ' of this bezier')
+        if (dimension >= p.dimension)
+            throw new Error('the given dimension ' + dimension + ' is greater than the dimension ' + (p.dimension - 1) + ' of this bezier')
 
-        let prev = this.points.points[0][dimension];
-        for (let g = 1; g < this.points.grade; g++)
-            if (this.points.points[g][dimension] <= prev)
+        const a = p.points[0][dimension];
+        const b = p.points[p.grade - 1][dimension];
+
+        const min = a < b ? a : b;
+        const max = a > b ? a : b;
+
+        // all points have to be between the first and last point of in that dimension
+        for (let g = 1; g < p.grade - 1; g++)
+            if (p.points[g][dimension] < min || p.points[g][dimension] > max)
                 return false;
-            else
-                prev = this.points.points[g][dimension];
 
         return true;
     }
@@ -121,19 +126,33 @@ export class Bezier {
     public at(t: number): number[] { throw new Error('no at function set'); }
 
     private atToReproduce(t: number): number[] {
+        console.log('-> atToReproduce');
         if (this.points == null)
             throw new Error('no points are set');
 
+        console.log('generating atFunction');
         const atFunction = this.atGenerator.generate(this);
 
         if (atFunction == null)
             throw new Error('can not use the given at function "' + this.atGenerator.name + '" for this bezier [grade: ' + this.points.grade + ', dimension: ' + this.points.dimension + ']');
 
 
-        return (this.at = atFunction.bind(null, this.points))(t);
+        const boundAt = (t: number): number[] => {
+            if (this.points == null)
+                throw new Error('this is madness');
+
+            const ret = atFunction(this.points, t);
+            console.log('for t', t, 'at returned', ret);
+            return ret;
+        }
+
+        this.at = boundAt;
+        return boundAt(t);
+        // return (this.at = atFunction.bind(null, this.points))(t);
     }
 
     public setAtFunction(generator: UsableFunction<AtFunction> | string) {
+        console.log('-> setAtFunction');
         if (typeof generator == 'string')
             if (generator in AT_FUNCTIONS)
                 generator = AT_FUNCTIONS[generator];
@@ -150,18 +169,21 @@ export class Bezier {
     public tSearch(value: number, dimension: number): number { throw new Error('no tSearch function set'); }
 
     private tSearchReproduce(value: number, dimension: number): number {
+        console.log('-> tSearchReproduce');
         if (this.points == null)
             throw new Error('no points are set');
 
+        console.log('generating tSearchFunction');
         const tSearchFunction = this.tSearchGenerator.generate(this);
 
         if (tSearchFunction == null)
             throw new Error('can not use the given tSearch function "' + this.tSearchGenerator.name + '" for this bezier [grade: ' + this.points.grade + ', dimension: ' + this.points.dimension + ']');
 
-        return (this.tSearch = tSearchFunction.bind(this.points))(value, dimension);
+        return (this.tSearch = tSearchFunction.bind(null, this.points))(value, dimension);
     }
 
     public setTSearchFunction(generator: string | UsableFunction<TSearchFunction>) {
+        console.log('-> setTSearchFunction');
         if (typeof generator == 'string')
             if (generator in TSEARCH_FUNCTIONS)
                 generator = TSEARCH_FUNCTIONS[generator];
