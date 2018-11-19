@@ -7,6 +7,8 @@ export class Bezier {
     private atGenerator!: UsableFunction<AtFunction>;
     private tSearchGenerator!: UsableFunction<TSearchFunction>;
 
+    private bezierProperties: null | BezierProperties = null;
+
     constructor(points?: number[][], atFunctionGen: string | UsableFunction<AtFunction> = AT_FUNCTIONS_NAMES[0], tSearchFunctionGen: string | UsableFunction<TSearchFunction> = TSEARCH_FUNCTIONS_NAMES[0]) {
         if (points != null)
             this.setPoints(points);
@@ -16,11 +18,7 @@ export class Bezier {
     }
 
     public getBezierProperties(): null | BezierProperties {
-        return this.points == null ? null : {
-            dimension: this.points.dimension,
-            grade: this.points.grade,
-            points: this.points.points
-        };
+        return this.bezierProperties;
     }
 
     public copyPoints(): number[][] | null {
@@ -96,9 +94,11 @@ export class Bezier {
                 this.tSearch = this.tSearchReproduce;
         }
 
-        pRef.dimension = dimension;
-        pRef.grade = grade;
-        pRef.points = copy;
+        let bezierProperties = this.bezierProperties == null ? this.bezierProperties = <any>{} : this.bezierProperties;
+
+        bezierProperties.dimension = pRef.dimension = dimension;
+        bezierProperties.grade = pRef.grade = grade;
+        bezierProperties.points = pRef.points = copy;
     }
 
     public isInjective(dimension: number): boolean | undefined {
