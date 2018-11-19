@@ -134,18 +134,7 @@ export class Bezier {
         if (atFunction == null)
             throw new Error('can not use the given at function "' + this.atGenerator.name + '" for this bezier [grade: ' + this.points.grade + ', dimension: ' + this.points.dimension + ']');
 
-
-        const boundAt = (t: number): number[] => {
-            if (this.points == null)
-                throw new Error('this is madness');
-
-            const ret = atFunction(this.points, t);
-            return ret;
-        }
-
-        this.at = boundAt;
-        return boundAt(t);
-        // return (this.at = atFunction.bind(null, this.points))(t);
+        return (this.at = atFunction.bind(null, this.points))(t);
     }
 
     public setAtFunction(generator: UsableFunction<AtFunction> | string) {
