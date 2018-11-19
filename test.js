@@ -1,7 +1,8 @@
 const { Bezier } = require('.');
 
 const arr = [[0, 0], [1, 0], [0, 1], [1, 1]];
-const bezier = new Bezier(arr);
+// const bezier = new Bezier(arr, null, 'binary-search');
+const bezier = new Bezier(arr, undefined, undefined);
 console.log(bezier.tSearch(0.468, 0));
 
 

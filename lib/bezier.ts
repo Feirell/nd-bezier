@@ -126,11 +126,9 @@ export class Bezier {
     public at(t: number): number[] { throw new Error('no at function set'); }
 
     private atToReproduce(t: number): number[] {
-        console.log('-> atToReproduce');
         if (this.points == null)
             throw new Error('no points are set');
 
-        console.log('generating atFunction');
         const atFunction = this.atGenerator.generate(this);
 
         if (atFunction == null)
@@ -142,7 +140,6 @@ export class Bezier {
                 throw new Error('this is madness');
 
             const ret = atFunction(this.points, t);
-            console.log('for t', t, 'at returned', ret);
             return ret;
         }
 
@@ -152,7 +149,6 @@ export class Bezier {
     }
 
     public setAtFunction(generator: UsableFunction<AtFunction> | string) {
-        console.log('-> setAtFunction');
         if (typeof generator == 'string')
             if (generator in AT_FUNCTIONS)
                 generator = AT_FUNCTIONS[generator];
@@ -169,11 +165,9 @@ export class Bezier {
     public tSearch(value: number, dimension: number): number { throw new Error('no tSearch function set'); }
 
     private tSearchReproduce(value: number, dimension: number): number {
-        console.log('-> tSearchReproduce');
         if (this.points == null)
             throw new Error('no points are set');
 
-        console.log('generating tSearchFunction');
         const tSearchFunction = this.tSearchGenerator.generate(this);
 
         if (tSearchFunction == null)
@@ -183,7 +177,6 @@ export class Bezier {
     }
 
     public setTSearchFunction(generator: string | UsableFunction<TSearchFunction>) {
-        console.log('-> setTSearchFunction');
         if (typeof generator == 'string')
             if (generator in TSEARCH_FUNCTIONS)
                 generator = TSEARCH_FUNCTIONS[generator];

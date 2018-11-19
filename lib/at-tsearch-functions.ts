@@ -439,27 +439,15 @@ TSEARCH_FUNCTIONS['binary-search'] = {
 
         const dimensionConfiguration = new Array(bezierProperties.dimension);
         for (let d = 0; d < bezierProperties.dimension; d++) {
-            const a = bezierProperties.points[d][0];
-            const b = bezierProperties.points[d][bezierProperties.grade - 1];
-
-            const min = a < b ? a : b;
-            const max = a > b ? a : b;
-
-            const diff = max - min;
-
             dimensionConfiguration[d] = {
-                func: (v: number) => (bez.at(v)[d] - min) / diff,
+                func: (v: number) => bez.at(v)[d],
                 inje: bez.isInjective(d)
             };
         }
 
         return (bp, v, d) => {
-            console.log('v:', v, ', d: ', d);
-            console.log('dimensionConfiguration', dimensionConfiguration);
             const dConf = dimensionConfiguration[d];
-            if (!dConf.inje) return NaN;
-
-            return binSearch(dConf.func, v, 1e-5);
+            return dConf.inje ? binSearch(dConf.func, v, 1e-5) : NaN;
         }
     },
     shouldReset(g, d, p) {
