@@ -2,7 +2,8 @@ const { TestGroup } = require('./test-group.js');
 
 const {
     Bezier,
-    AT_FUNCTIONS_NAMES
+    AT_FUNCTIONS_NAMES,
+    TSEARCH_FUNCTIONS_NAMES
 } = require('../'); // since an directory with an package.json is an package
 
 const points = [
@@ -23,6 +24,13 @@ new TestGroup('at', AT_FUNCTIONS_NAMES, name => {
     const instance = new Bezier(points, name);
     return () => {
         instance.at(0.3);
+    }
+});
+
+new TestGroup('t-search', TSEARCH_FUNCTIONS_NAMES, name => {
+    const instance = new Bezier(points, undefined, name);
+    return () => {
+        instance.tSearch(1.9, 0); // ≈ 0.3
     }
 });
 
