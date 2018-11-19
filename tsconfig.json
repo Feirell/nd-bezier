@@ -4,6 +4,7 @@
         "declaration": true,
         "strict": true,
         "removeComments": true,
+        "moduleResolution": "node",
     },
     "files": [
         "./lib/index.ts"

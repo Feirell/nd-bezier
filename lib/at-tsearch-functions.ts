@@ -1,10 +1,11 @@
+import * as solver from 'linear-quadratic-cubic-eq-solver';
 import {
     bc,
     pow
 } from './math-functions';
 
 import { Bezier } from './bezier';
-
+import Complex from 'linear-quadratic-cubic-eq-solver/cjs/complex';
 export interface BezierProperties {
     points: number[][];
     dimension: number;
@@ -35,7 +36,7 @@ export interface UsableFunction<T> {
 }
 
 export type AtFunction = (bezierProperties: BezierProperties, t: number) => number[]
-export type TSearchFunction = (bezierProperties: BezierProperties, value: number, dimension: number) => number
+export type TSearchFunction = (bezierProperties: BezierProperties, value: number, dimension: number) => number[]  // all solution
 
 /*
 
@@ -447,11 +448,44 @@ TSEARCH_FUNCTIONS['binary-search'] = {
 
         return (bp, v, d) => {
             const dConf = dimensionConfiguration[d];
-            return dConf.inje ? binSearch(dConf.func, v, 1e-5) : NaN;
+            return dConf.inje ? [binSearch(dConf.func, v, 1e-5)] : [];
         }
     },
     shouldReset(g, d, p) {
         return p; // for the offchance that the new points are changing the injective property
+    }
+}
+
+const filterReal = (n: any[]) => n.filter(n => !(n instanceof Complex) || inRange(n.im, 0, 1e-8) == 0).map(n => n instanceof Complex ? n.re : n);
+
+const solvingFunctions: ((p: number[], f: number) => number[])[] = [
+    (p, f) => { return [0]; },
+    (p, f) => { return [0]; },
+    (p: number[], f: number): number[] => {
+
+        const a = -p[0] + 3 * p[1] - 3 * p[2] + p[3];
+        const b = 3 * p[0] - 6 * p[1] + 3 * p[2];
+        const c = -3 * p[0] + 3 * p[1];
+        const d = p[0] - f;
+
+        return filterReal(solver.solveCubicEquation(a, b, c, d));
+    }
+]
+
+TSEARCH_FUNCTIONS['deterministic'] = {
+    name: 'deterministic',
+    generate(bez) {
+        const d = bez.getGrade();
+        if (d == null || d < 2 || d > 4)
+            return null;
+
+        const func = solvingFunctions[d - 2];
+        return (bp, v, d) => {
+            return func(bp.points.map(v => v[d]), v);
+        }
+    },
+    shouldReset(g, d, p) {
+        return g;
     }
 }
 
