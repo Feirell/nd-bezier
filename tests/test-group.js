@@ -1,4 +1,4 @@
-const Benchmark = require('benchmark');
+const { Suite } = require('benchmark');
 const formatter = require('benchmark-suite-formatter');
 
 const arrayCopy = (inst, off = 0) => Array.prototype.slice.call(inst, off);
@@ -49,7 +49,7 @@ class TestGroup {
         if (allFuncts.length == 0)
             return;
 
-        this.suite = new Benchmark.Suite();
+        this.suite = new Suite();
 
         // function wrapTest(func) {
         //     return function () {
@@ -90,8 +90,6 @@ class TestGroup {
             return true;
         }).join('|');
 
-        console.log('bigRegExpString', bigRegExpString);
-
         if (bigRegExpString.length == 0)
             return arrayCopy(this.defaultArray);
 
@@ -120,11 +118,13 @@ class TestGroup {
         }
     }
 
-    static async testAllGroups() {
+    static async testAllGroups(continues = true) {
 
-        const timeoutID = setInterval(() => {
-            TestGroup.logAllSuites();
-        }, 75);
+        let timeoutID;
+        if (continues)
+            timeoutID = setInterval(() => {
+                TestGroup.logAllSuites();
+            }, 75);
 
         for (let testGroup of TestGroup.getAllGroups())
             testGroup.createSuite();
@@ -132,7 +132,8 @@ class TestGroup {
         for (let testGroup of TestGroup.getAllGroups())
             await testGroup.startSuite();
 
-        clearInterval(timeoutID);
+        if (continues)
+            clearInterval(timeoutID);
         TestGroup.logAllSuites();
     }
 }
