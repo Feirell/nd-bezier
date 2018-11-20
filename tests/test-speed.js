@@ -50,4 +50,4 @@ for (let arg of args) {
     }
 }
 
-TestGroup.testAllGroups(false);
+TestGroup.testAllGroups(true);
