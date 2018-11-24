@@ -446,7 +446,11 @@ TSEARCH_FUNCTIONS['binary-search'] = {
 
         return (bp, v, d) => {
             const dConf = dimensionConfiguration[d];
-            return dConf.inje ? [binSearch(dConf.func, v, 1e-5)] : [];
+            if (!dConf.inje)
+                return [];
+
+            const bsResult = binSearch(dConf.func, v, 1e-5);
+            return isNaN(bsResult) ? [] : [bsResult];
         }
     },
     shouldReset(g, d, p) {

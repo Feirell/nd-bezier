@@ -7,6 +7,9 @@ const {
 } = require('..');
 
 function inRange(is, should, range = 1e-5) {
+    if (!isFinite(is))
+        assert.fail(is + ' is not finite');
+
     if (!(Math.abs(is - should) <= range))
         assert.fail('' + is + ' is not in the range of ' + should + ' is off by ' + (Math.abs(is - should) - range));
 }
@@ -18,7 +21,7 @@ function oneInRange(isses, should, range = 1e-5) {
             return;
         } catch (e) { }
 
-    assert.fail('[' + is + '] is not in the range of ' + should);
+    assert.fail('[' + isses + '] is not in the range of ' + should);
 }
 
 describe('Bezier', function () {

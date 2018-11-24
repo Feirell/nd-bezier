@@ -115,6 +115,8 @@ export class Bezier {
         const min = a < b ? a : b;
         const max = a > b ? a : b;
 
+        if (min == max) return false;
+
         // all points have to be between the first and last point of in that dimension
         for (let g = 1; g < p.grade - 1; g++)
             if (p.points[g][dimension] < min || p.points[g][dimension] > max)
