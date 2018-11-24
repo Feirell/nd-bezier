@@ -51,3 +51,28 @@ produced-specific 34,888,106 ± 0.34%      90
          nd-cubic  3,620,254 ± 0.28%      92
       2d-iterativ  3,279,738 ± 0.26%      91
 ```
+
+### v0.1.0
+
+```text
+create-at
+             name ops/sec     MoE samples
+ produced-generic 401,281 ± 0.36%      89
+produced-specific 140,400 ± 0.17%      94
+      nd-iterativ 368,200 ± 0.37%      92
+         nd-cubic 394,002 ± 1.14%      93
+      2d-iterativ 388,142 ± 1.12%      92
+
+at
+             name    ops/sec     MoE samples
+ produced-generic  2,461,096 ± 0.16%      94
+produced-specific 33,330,328 ± 0.21%      92
+      nd-iterativ  1,630,860 ± 0.15%      93
+         nd-cubic  2,457,887 ± 0.16%      94
+      2d-iterativ  2,496,713 ± 0.17%      92
+
+t-search
+         name ops/sec     MoE samples
+binary-search 150,140 ± 0.22%      92
+deterministic 686,417 ± 0.37%      89
+```
