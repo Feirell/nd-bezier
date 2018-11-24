@@ -1,8 +1,7 @@
 {
   "name": "nd-bezier",
   "version": "0.1.4",
-  "main": "./cjs/index.js",
-  "module": "./esm/index.js",
+  "main": "./cjs/bezier.js",
   "scripts": {
     "build": "tsc",
     "speed": "node ./tests/test-speed.js",
