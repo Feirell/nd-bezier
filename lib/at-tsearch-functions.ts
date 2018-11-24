@@ -5,7 +5,7 @@ import {
 } from './math-functions';
 
 import { Bezier } from './bezier';
-import Complex from 'linear-quadratic-cubic-eq-solver/cjs/complex';
+import Complex from 'linear-quadratic-cubic-eq-solver/cjs/complex.js';
 export interface BezierProperties {
     points: number[][];
     dimension: number;

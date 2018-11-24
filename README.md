@@ -41,8 +41,8 @@ console.log('ts for x = 1.8:', bezier.tSearch(1.8, 1)) // 1 is the dimension of 
 Or you can use this package in a browser: 
 
 ```html
-<script>
-    import { Bezier } from './node_modules/nd-bezier/esm';
+<script type="module">
+    import { Bezier } from './node_modules/nd-bezier/esm/index.js';
 
     // ...
 </script>
