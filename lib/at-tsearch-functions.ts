@@ -1,11 +1,9 @@
 import * as solver from 'linear-quadratic-cubic-eq-solver';
-import {
-    bc,
-    pow
-} from './math-functions';
+import Complex from 'linear-quadratic-cubic-eq-solver/cjs/complex';
 
+import { bc, pow } from './math-functions';
 import { Bezier } from './bezier';
-import Complex from 'linear-quadratic-cubic-eq-solver/cjs/complex.js';
+
 export interface BezierProperties {
     points: number[][];
     dimension: number;

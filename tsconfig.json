@@ -5,8 +5,10 @@
         "strict": true,
         "removeComments": true,
         "moduleResolution": "node",
+        "module": "commonjs",
+        "outDir": "cjs"
     },
     "files": [
-        "./lib/index.ts"
+        "./lib/bezier.ts"
     ]
 }

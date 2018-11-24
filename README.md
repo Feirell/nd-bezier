@@ -38,16 +38,6 @@ console.log('ts for x = 1.8:', bezier.tSearch(1.8, 1)) // 1 is the dimension of 
 
 ```
 
-Or you can use this package in a browser: 
-
-```html
-<script type="module">
-    import { Bezier } from './node_modules/nd-bezier/esm/index.js';
-
-    // ...
-</script>
-```
-
 ## implementations
 
 This package provides multiple implementations for the `at` and `t-search` function. Each has its own limitations and qualities. To create a `Bezier` with another `at` or `tSearch` function you can use the `setAtFunction` or `setTSearchFunction` or the `constructor`:

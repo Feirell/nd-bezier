@@ -1,12 +1,10 @@
 {
   "name": "nd-bezier",
-  "version": "0.1.1",
+  "version": "0.1.4",
   "main": "./cjs/index.js",
   "module": "./esm/index.js",
   "scripts": {
-    "cjs": "tsc -p tsconfig-node.json",
-    "esm": "tsc -p tsconfig-web.json",
-    "build": "npm run cjs && npm run esm",
+    "build": "tsc",
     "speed": "node ./tests/test-speed.js",
     "test": "mocha ./tests/test.js"
   },
@@ -22,7 +20,6 @@
     "typescript": "^3.1.3"
   },
   "files": [
-    "esm",
     "cjs"
   ],
   "bugs": {
