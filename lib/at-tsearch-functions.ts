@@ -413,9 +413,11 @@ const binSearch = (func: (v: number) => number, should: number, margin: number, 
 
     let m = 2; // 1/m is the current shift in each cycle
 
+    const shift = func(0) <= func(1);
+
     let d;
     while ((d = inRange(func(c / m), should, margin)) != 0) {
-        c = (c << 1) - d;
+        c = (c << 1) + (shift ? -d : +d);
 
         if (m > 0 && (m << 1) < 0)
             if (throwError)
@@ -438,6 +440,8 @@ TSEARCH_FUNCTIONS['binary-search'] = {
 
         const dimensionConfiguration = new Array(bezierProperties.dimension);
         for (let d = 0; d < bezierProperties.dimension; d++) {
+
+
             dimensionConfiguration[d] = {
                 func: (v: number) => bez.at(v)[d],
                 inje: bez.isInjective(d)
@@ -446,6 +450,7 @@ TSEARCH_FUNCTIONS['binary-search'] = {
 
         return (bp, v, d) => {
             const dConf = dimensionConfiguration[d];
+
             if (!dConf.inje)
                 return [];
 
