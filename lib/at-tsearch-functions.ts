@@ -459,10 +459,22 @@ TSEARCH_FUNCTIONS['binary-search'] = {
 const filterReal = (n: any[]) => n.filter(n => !(n instanceof Complex) || inRange(n.im, 0, 1e-8) == 0).map(n => n instanceof Complex ? n.re : n);
 
 const solvingFunctions: ((p: number[], f: number) => number[])[] = [
-    (p, f) => { return [0]; },
-    (p, f) => { return [0]; },
-    (p: number[], f: number): number[] => {
+    (p, f) => {
+        const a = p[1] - p[0];
+        const b = p[0] - f;
 
+        return filterReal(solver.solveLinearEquation(a, b));
+    },
+
+    (p, f) => {
+        const a = p[0] - 2 * p[1] + p[2];
+        const b = -2 * p[0] + 2 * p[1];
+        const c = p[0] - f;
+
+        return filterReal(solver.solveQuadraticEquation(a, b, c));
+    },
+
+    (p, f) => {
         const a = -p[0] + 3 * p[1] - 3 * p[2] + p[3];
         const b = 3 * p[0] - 6 * p[1] + 3 * p[2];
         const c = -3 * p[0] + 3 * p[1];
@@ -475,11 +487,11 @@ const solvingFunctions: ((p: number[], f: number) => number[])[] = [
 TSEARCH_FUNCTIONS['deterministic'] = {
     name: 'deterministic',
     generate(bez) {
-        const d = bez.getGrade();
-        if (d == null || d < 2 || d > 4)
+        const g = bez.getGrade();
+        if (g == null || g < 2 || g > 4)
             return null;
 
-        const func = solvingFunctions[d - 2];
+        const func = solvingFunctions[g - 2];
         return (bp, v, d) => {
             return func(bp.points.map(v => v[d]), v);
         }

@@ -11,16 +11,55 @@ function inRange(is, should, range = 1e-5) {
         assert.fail('' + is + ' is not in the range of ' + should + ' is off by ' + (Math.abs(is - should) - range));
 }
 
+function oneInRange(isses, should, range = 1e-5) {
+    for (let is of isses)
+        try {
+            inRange(is, should, range);
+            return;
+        } catch (e) { }
+
+    assert.fail('[' + is + '] is not in the range of ' + should);
+}
+
 describe('Bezier', function () {
-    const arr = [[0, 0], [1, 0], [0, 1], [1, 1]];
-    const arrStr = JSON.stringify(arr);
+    const arrLinear = [[0, 0], [2, 1]];
+    const arrLinearStr = JSON.stringify(arrLinear);
+
+    const arrCubic = [[0, 0], [0, 1], [1, 1]];
+    const arrCubicStr = JSON.stringify(arrCubic);
+
+    const arrQuadratic = [[0, 0], [1, 0], [0, 1], [1, 1]];
+    const arrQuadraticStr = JSON.stringify(arrQuadratic);
+
+    const arrays = [{
+        array: arrLinear,
+        string: arrLinearStr,
+        solution: {
+            xValue: 1,
+            tValue: 0.5
+        }
+    }, {
+        array: arrCubic,
+        string: arrCubicStr,
+        solution: {
+            xValue: 0.25,
+            tValue: 0.5
+        }
+    }, {
+        array: arrQuadratic,
+        string: arrQuadraticStr,
+        solution: {
+            xValue: 0.468,
+            tValue: 0.3
+        }
+    }];
 
     for (let name of AT_FUNCTIONS_NAMES) {
         describe('Bezier with atFunction "' + name + '"', function () {
             let bezier;
 
-            it('new Bezier(' + arrStr + ', "' + name + '") instanceof Bezier', function () {
-                bezier = new Bezier(arr, name);
+            it('new Bezier(' + arrQuadraticStr + ', "' + name + '") instanceof Bezier', function () {
+                bezier = new Bezier(arrQuadratic, name);
                 assert(bezier instanceof Bezier);
             });
 
@@ -48,15 +87,17 @@ describe('Bezier', function () {
         describe('Bezier with tSearchFunction "' + name + '"', function () {
             let bezier;
 
-            it('new Bezier(' + arrStr + ', undefined, "' + name + '") instanceof Bezier', function () {
-                bezier = new Bezier(arr, undefined, name);
-                assert(bezier instanceof Bezier);
-            });
+            for (let { array, string, solution } of arrays) {
+                it('new Bezier(' + string + ', undefined, "' + name + '") instanceof Bezier', function () {
+                    bezier = new Bezier(array, undefined, name);
+                    assert(bezier instanceof Bezier);
+                });
 
-            it('bezier.tSearch(0.468, 0) ≈ 0.3', function () {
-                const res = bezier.tSearch(0.468, 0);
-                inRange(res, 0.3, 1e-4);
-            });
+                it('bezier.tSearch(' + solution.xValue + ', 0) ≈ ' + solution.tValue, function () {
+                    const res = bezier.tSearch(solution.xValue, 0);
+                    oneInRange(res, solution.tValue, 1e-4);
+                });
+            }
         });
     }
 });
