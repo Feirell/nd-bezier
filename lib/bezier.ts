@@ -153,9 +153,9 @@ export class Bezier {
         this.at = this.atToReproduce;
     }
 
-    public tSearch(value: number, dimension: number): number { throw new Error('no tSearch function set'); }
+    public tSearch(value: number, dimension: number): number[] { throw new Error('no tSearch function set'); }
 
-    private tSearchReproduce(value: number, dimension: number): number {
+    private tSearchReproduce(value: number, dimension: number): number[] {
         if (this.points == null)
             throw new Error('no points are set');
 
