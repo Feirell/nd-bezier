@@ -5,15 +5,16 @@ import { inRange } from '../util';
 import * as solver from 'linear-quadratic-cubic-eq-solver';
 import Complex from "linear-quadratic-cubic-eq-solver/cjs/complex";
 
-const cleanSolutions = (n: any[]): number[] => {
-    const k = [];
+const cleanSolutions = (n: (number | Complex)[]): number[] => {
+    const k: number[] = [];
 
     for (const h of n) {
-        if (h instanceof Complex) {
-            if (inRange(h.im, 0, 1e-8))
+        if (typeof h == 'number')
+            k[k.length] = h;
+        else
+            if (inRange(h.im, 0, 1e-8) == 0)
                 k[k.length] = h.re;
-        } else
-            k[k.length] = n;
+
     }
 
     return k as number[];
