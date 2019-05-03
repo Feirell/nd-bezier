@@ -3,10 +3,14 @@ const { TestGroup } = require('./test-group.js');
 const {
     Bezier,
     StaticBezier,
-    TSEARCH_FUNCTIONS_NAMES: availableTSearchNames
+    AT_FUNCTIONS_NAMES,
+    TSEARCH_FUNCTIONS_NAMES
 } = require('../'); // since an directory with an package.json is an package
 
-let availableAtNames = Array.from(require('..').AT_FUNCTIONS_NAMES);
+let availableTSearchNames = Array.from(TSEARCH_FUNCTIONS_NAMES);
+let availableAtNames = Array.from(AT_FUNCTIONS_NAMES);
+
+availableTSearchNames.push('StaticBezier');
 availableAtNames.push('StaticBezier');
 
 const points = [
@@ -37,9 +41,12 @@ new TestGroup('at', availableAtNames, name => {
 });
 
 new TestGroup('t-search', availableTSearchNames, name => {
-    const instance = new Bezier(points, undefined, name);
-    return () => {
-        instance.tSearch(1.9, 0); // ≈ 0.3
+    if (name == 'StaticBezier') {
+        const sb = new StaticBezier(points);
+        return () => sb.tSearch(1.9, 0); // ≈ 0.3
+    } else {
+        const instance = new Bezier(points, undefined, name);
+        return () => instance.tSearch(1.9, 0); // ≈ 0.3
     }
 });
 
