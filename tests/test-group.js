@@ -2,6 +2,12 @@ const { Suite } = require('benchmark');
 const formatter = require('benchmark-suite-formatter');
 
 const arrayCopy = (inst, off = 0) => Array.prototype.slice.call(inst, off);
+const isValidRegExp = regExpString => {
+    try {
+        new RegExp(regExpString);
+        return true;
+    } catch (e) { return false; }
+}
 
 class TestGroup {
     constructor(name, paramArray, testFunctionProducer) {
@@ -16,14 +22,11 @@ class TestGroup {
 
     }
 
-    getString() {
-        if (this.suite)
-            return this.name + '\n' + formatter.stringifySuite(this.suite);
-        else
-            return undefined;
+    getSuiteString() {
+        return this.suite ? formatter.stringifySuite(this.suite) : undefined;
     }
 
-    startSuite() {
+    runSuite() {
         return new Promise((resolve, reject) => {
             if (!this.suite)
                 resolve();
@@ -49,56 +52,32 @@ class TestGroup {
         if (allFuncts.length == 0)
             return;
 
-        this.suite = new Suite();
+        this.suite = new Suite(this.name);
 
-        // function wrapTest(func) {
-        //     return function () {
-        //         try {
-        //             func()
-        //         } catch (e) {
-        //             console.error('%s threw an error\n', func.name, e);
-        //             process.exit();
-        //         }
-        //     }
-        // }
-
-        for (let { name, func } of allFuncts)
+        for (const { name, func } of allFuncts)
             this.suite.add(name, func);
     }
 
     addFilterString(str) {
         if (str == 'none')
             this.none = true;
-        else
+        else if (str.length > 0 && isValidRegExp(str) && !this.regExpStrings.includes(str))
             this.regExpStrings.push(str);
     }
 
-    getAllFitting() {
+    getAllFittingFunctions() {
         if (this.none)
             return [];
 
-        const bigRegExpString = this.regExpStrings.filter(str => {
-            if (str == '')
-                return false;
-
-            try {
-                new RegExp(str);
-            } catch (e) {
-                return false;
-            }
-
-            return true;
-        }).join('|');
-
-        if (bigRegExpString.length == 0)
+        if (this.regExpStrings.length == 0)
             return arrayCopy(this.defaultArray);
 
-        const regExp = new RegExp(bigRegExpString);
+        const regExp = new RegExp(this.regExpStrings.join('|'));
         return this.defaultArray.filter(str => regExp.test(str))
     }
 
     getAllTestsFunctions() {
-        return this.getAllFitting().map(name => ({ name, func: this.testFunctionProducer(name) }));
+        return this.getAllFittingFunctions().map(name => ({ name, func: this.testFunctionProducer(name) }));
     }
 
     static getGroupByName(name) {
@@ -110,7 +89,7 @@ class TestGroup {
     }
 
     static logAllSuites() {
-        let con = TestGroup.getAllGroups().map(group => group.getString()).filter(v => v != undefined);
+        const con = TestGroup.getAllGroups().map(group => group.getSuiteString()).filter(v => v != undefined);
 
         if (con.length > 0) {
             console.clear();
@@ -126,11 +105,11 @@ class TestGroup {
                 TestGroup.logAllSuites();
             }, 75);
 
-        for (let testGroup of TestGroup.getAllGroups())
+        for (const testGroup of TestGroup.getAllGroups())
             testGroup.createSuite();
 
-        for (let testGroup of TestGroup.getAllGroups())
-            await testGroup.startSuite();
+        for (const testGroup of TestGroup.getAllGroups())
+            await testGroup.runSuite();
 
         if (continues)
             clearInterval(timeoutID);
