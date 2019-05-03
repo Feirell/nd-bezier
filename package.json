@@ -11,12 +11,15 @@
   "author": "Florian Völker <Neirolf2030@web.de>",
   "license": "MIT",
   "private": false,
+  "dependencies": {
+    "linear-quadratic-cubic-eq-solver": "^0.0.4"
+  },
   "devDependencies": {
     "benchmark": "^2.1.4",
-    "benchmark-suite-formatter": "^1.0.0",
-    "microtime": "^2.1.8",
-    "mocha": "^5.2.0",
-    "typescript": "^3.1.3"
+    "benchmark-suite-formatter": "^2.0.2",
+    "microtime": "^3.0.0",
+    "mocha": "^6.1.4",
+    "typescript": "^3.4.5"
   },
   "files": [
     "cjs"
@@ -32,8 +35,5 @@
     "interpolation",
     "3d",
     "2d"
-  ],
-  "dependencies": {
-    "linear-quadratic-cubic-eq-solver": "^0.0.2"
-  }
+  ]
 }
