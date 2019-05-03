@@ -9,6 +9,6 @@
         "outDir": "cjs"
     },
     "files": [
-        "./lib/bezier.ts"
+        "./lib/index.ts"
     ]
 }

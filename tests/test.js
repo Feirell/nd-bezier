@@ -2,6 +2,7 @@ const assert = require('assert');
 
 const {
     Bezier,
+    StaticBezier,
     AT_FUNCTIONS_NAMES,
     TSEARCH_FUNCTIONS_NAMES
 } = require('..');
@@ -56,6 +57,30 @@ describe('Bezier', () => {
                 tValue: 0.3
             }]
         }];
+
+    describe('StaticBezier', () => {
+        const quadratic = holdingPointVariations[3];
+
+        const bezier = new StaticBezier(quadratic.holdingPoint);
+
+        it('bezier.at(0.3) ≈ [0.468, 0.216]', () => {
+            const res = bezier.at(0.3);
+            inRange(res[0], 0.468);
+            inRange(res[1], 0.216);
+        });
+
+        it('bezier.at(0) ≈ [0, 0]', () => {
+            const res = bezier.at(0);
+            inRange(res[0], 0);
+            inRange(res[1], 0);
+        });
+
+        it('bezier.at(1) ≈ [1, 1]', () => {
+            const res = bezier.at(1);
+            inRange(res[0], 1);
+            inRange(res[1], 1);
+        });
+    })
 
     for (const name of AT_FUNCTIONS_NAMES) {
         describe('Bezier with atFunction "' + name + '"', () => {

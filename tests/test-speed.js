@@ -2,9 +2,12 @@ const { TestGroup } = require('./test-group.js');
 
 const {
     Bezier,
-    AT_FUNCTIONS_NAMES,
-    TSEARCH_FUNCTIONS_NAMES
+    StaticBezier,
+    TSEARCH_FUNCTIONS_NAMES: availableTSearchNames
 } = require('../'); // since an directory with an package.json is an package
+
+let availableAtNames = Array.from(require('..').AT_FUNCTIONS_NAMES);
+availableAtNames.push('StaticBezier');
 
 const points = [
     [1, 5],
@@ -16,18 +19,24 @@ const points = [
 const arrayCopy = (inst, off = 0) => Array.prototype.slice.call(inst, off);
 const args = arrayCopy(process.argv, 2);
 
-new TestGroup('create-at', AT_FUNCTIONS_NAMES, name => {
-    return () => (new Bezier(points, name)).at(0);
+new TestGroup('create-at', availableAtNames, name => {
+    if (name == 'StaticBezier')
+        return () => new StaticBezier(points);
+    else
+        return () => (new Bezier(points, name)).at(0);
 });
 
-new TestGroup('at', AT_FUNCTIONS_NAMES, name => {
-    const instance = new Bezier(points, name);
-    return () => {
-        instance.at(0.3);
+new TestGroup('at', availableAtNames, name => {
+    if (name == 'StaticBezier') {
+        const sb = new StaticBezier(points);
+        return () => sb.at(0.3);
+    } else {
+        const instance = new Bezier(points, name);
+        return () => instance.at(0.3);
     }
 });
 
-new TestGroup('t-search', TSEARCH_FUNCTIONS_NAMES, name => {
+new TestGroup('t-search', availableTSearchNames, name => {
     const instance = new Bezier(points, undefined, name);
     return () => {
         instance.tSearch(1.9, 0); // ≈ 0.3

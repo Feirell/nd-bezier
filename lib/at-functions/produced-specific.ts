@@ -1,5 +1,5 @@
 import { AtFunction, UsableFunction, BezierProperties } from "../types";
-import { produceGenericAtFunction, fCache } from "./produced-generic";
+import { produceGenericAtFunction } from "./produced-generic";
 
 /*
 from: 
@@ -78,14 +78,13 @@ export function getPlaces(str: string) {
  * - Caching the positions of points[p][d] (this func): 230k ops/sec
  * 
  */
-function produceSpecificAtFunction({ points, dimension, grade }: BezierProperties): AtFunction {
-    grade--;
+function produceSpecificAtFunction(props: BezierProperties): AtFunction {
+    const points = props.points;
 
-    // should the generic function for this combination of grade and dimensions not be generated do it now
-    if (fCache[grade] == undefined || fCache[grade][dimension] == undefined)
-        produceGenericAtFunction({ points, dimension, grade });
+    // the generic function is the base for the specific one
+    const generic = produceGenericAtFunction(props);
 
-    const generic = fCache[grade][dimension];
+    // const generic = fCache[grade][dimension];
     let orig = generic.body;
 
     // if this generic function was never used for a specific one it
@@ -107,6 +106,8 @@ function produceSpecificAtFunction({ points, dimension, grade }: BezierPropertie
             newFuncBody += '' + points[para.point][para.dimension];
         }
     }
+
+    newFuncBody = newFuncBody.replace('const points = bezierProperties.points;', '');
 
     return <AtFunction>new Function('bezierProperties', 't', newFuncBody);
 }

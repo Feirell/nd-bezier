@@ -1,6 +1,5 @@
-import { AT_FUNCTIONS, TSEARCH_FUNCTIONS, AT_FUNCTIONS_NAMES, TSEARCH_FUNCTIONS_NAMES } from './at-tsearch-functions'
+import { AT_FUNCTIONS, TSEARCH_FUNCTIONS } from './at-tsearch-functions'
 import { BezierProperties, UsableFunction, AtFunction, TSearchFunction } from './types';
-export { AT_FUNCTIONS_NAMES, TSEARCH_FUNCTIONS_NAMES };
 
 export class Bezier {
     private points: null | BezierProperties = null;
