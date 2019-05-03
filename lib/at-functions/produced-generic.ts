@@ -39,18 +39,16 @@ export function produceGenericAtFunction(props: BezierProperties): FCacheEntry {
     /**
      * point sum is an array of strings which collect the sum of the point dimension
      * 
-     * pointSum[0]: "rePoint[0] = m0 * 1 + m1 * 2 + ..." etc.
+     * pointSum[0]: "m0 * 1 + m1 * 2 + ..." etc.
      */
-    let pointSum = new Array(dimension);
-    for (let i = 0; i < dimension; i++)
-        pointSum[i] = "rePoint[" + i + "] = ";
+    const pointSum = new Array(dimension).fill("");
 
     /**
      * for each grade one multiplier is created
      * 
      * const m0 = 1 * t * t * t * oneMinusT; etc.
      * 
-     * and each buffer will be extended for the current mutlipleier
+     * and each buffer will be extended for the current multipleier
      */
     for (let i = 0; i <= grade; i++) {
         const multiplierName = "m" + i;
@@ -66,27 +64,16 @@ export function produceGenericAtFunction(props: BezierProperties): FCacheEntry {
         }
     }
 
+
+    let pointSumConcat = "";
     /**
      * each buffer will be terminated by a semicolon
+     * concatinating the pointSum to one string
      */
     for (let i = 0; i < dimension; i++)
-        pointSum[i] += ";\n";
+        pointSumConcat += "    " + pointSum[i] + (i == dimension - 1 ? "\n" : ",\n");
 
-    /**
-     * concatinating the pointSum to one string and building an initilizing array literal:
-     * 
-     * so in the end const
-     * rePoint = [NaN, NaN, ...]
-     */
-    let pointSumConcat = "";
-    let arrLiteral = "";
-    for (let i = 0; i < dimension; i++) {
-        pointSumConcat += pointSum[i];
-        arrLiteral += i < dimension - 1 ? "NaN, " : "NaN";
-    }
-    arrLiteral = "[" + arrLiteral + "]";
-
-    const body = "\"use strict\";const points = bezierProperties.points;\nconst oneMinusT = 1 - t;\nconst rePoint = " + arrLiteral + ";\n" + multiplier + pointSumConcat + "return rePoint;";
+    const body = "\"use strict\";\nconst points = bezierProperties.points;\nconst oneMinusT = 1 - t;\n" + multiplier + "return [\n" + pointSumConcat + "];";
     const func = <AtFunction>new Function('bezierProperties', 't', body);
 
     return fCache[grade][dimension] = {
