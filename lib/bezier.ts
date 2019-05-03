@@ -1,4 +1,5 @@
-import { AT_FUNCTIONS, TSEARCH_FUNCTIONS, AT_FUNCTIONS_NAMES, TSEARCH_FUNCTIONS_NAMES, UsableFunction, AtFunction, TSearchFunction, BezierProperties } from './at-tsearch-functions'
+import { AT_FUNCTIONS, TSEARCH_FUNCTIONS, AT_FUNCTIONS_NAMES, TSEARCH_FUNCTIONS_NAMES } from './at-tsearch-functions'
+import { BezierProperties, UsableFunction, AtFunction, TSearchFunction } from './types';
 export { AT_FUNCTIONS_NAMES, TSEARCH_FUNCTIONS_NAMES };
 
 export class Bezier {
@@ -9,7 +10,7 @@ export class Bezier {
 
     private bezierProperties: null | BezierProperties = null;
 
-    constructor(points?: number[][], atFunctionGen: string | UsableFunction<AtFunction> = AT_FUNCTIONS_NAMES[0], tSearchFunctionGen: string | UsableFunction<TSearchFunction> = TSEARCH_FUNCTIONS_NAMES[0]) {
+    constructor(points?: number[][], atFunctionGen: string | UsableFunction<AtFunction> = 'ND_ITERATIV', tSearchFunctionGen: string | UsableFunction<TSearchFunction> = 'DETERMENISTIC') {
         if (points != null)
             this.setPoints(points);
 
@@ -134,7 +135,7 @@ export class Bezier {
         const atFunction = this.atGenerator.generate(this);
 
         if (atFunction == null)
-            throw new Error('can not use the given at function "' + this.atGenerator.name + '" for this bezier [grade: ' + this.points.grade + ', dimension: ' + this.points.dimension + ']');
+            throw new Error('can not use the given at function for this bezier [grade: ' + this.points.grade + ', dimension: ' + this.points.dimension + ']');
 
         return (this.at = atFunction.bind(null, this.points))(t);
     }
@@ -142,7 +143,7 @@ export class Bezier {
     public setAtFunction(generator: UsableFunction<AtFunction> | string) {
         if (typeof generator == 'string')
             if (generator in AT_FUNCTIONS)
-                generator = AT_FUNCTIONS[generator];
+                generator = (AT_FUNCTIONS as { [key: string]: UsableFunction<AtFunction> })[generator];
             else
                 throw new Error('the name for the at function "' + generator + '" is not defined');
 
@@ -162,7 +163,7 @@ export class Bezier {
         const tSearchFunction = this.tSearchGenerator.generate(this);
 
         if (tSearchFunction == null)
-            throw new Error('can not use the given tSearch function "' + this.tSearchGenerator.name + '" for this bezier [grade: ' + this.points.grade + ', dimension: ' + this.points.dimension + ']');
+            throw new Error('can not use the given tSearch function for this bezier [grade: ' + this.points.grade + ', dimension: ' + this.points.dimension + ']');
 
         return (this.tSearch = tSearchFunction.bind(null, this.points))(value, dimension);
     }
@@ -170,7 +171,7 @@ export class Bezier {
     public setTSearchFunction(generator: string | UsableFunction<TSearchFunction>) {
         if (typeof generator == 'string')
             if (generator in TSEARCH_FUNCTIONS)
-                generator = TSEARCH_FUNCTIONS[generator];
+                generator = (TSEARCH_FUNCTIONS as { [key: string]: UsableFunction<TSearchFunction> })[generator];
             else
                 throw new Error('the name for the tSearch function "' + generator + '" is not defined');
 
