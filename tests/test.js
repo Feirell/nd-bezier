@@ -58,7 +58,7 @@ describe('Bezier', () => {
             }]
         }];
 
-    describe('StaticBezier', () => {
+    describe('StaticBezier at', () => {
         const quadratic = holdingPointVariations[3];
 
         const bezier = new StaticBezier(quadratic.holdingPoint);
@@ -107,6 +107,20 @@ describe('Bezier', () => {
             });
         });
     }
+
+    describe('StaticBezier tSearch', () => {
+
+        for (const { holdingPoint, solutions } of holdingPointVariations) {
+            const bezier = new StaticBezier(holdingPoint);
+
+            for (const { xValue, dimension, tValue } of solutions)
+                it('bezier.tSearch(' + xValue + ', ' + dimension + ') ≈ ' + tValue, () => {
+                    const res = bezier.tSearch(xValue, dimension);
+                    oneInRange(res, tValue, 1e-4);
+                });
+
+        }
+    });
 
     for (const name of TSEARCH_FUNCTIONS_NAMES) {
         describe('Bezier with tSearchFunction "' + name + '"', () => {
