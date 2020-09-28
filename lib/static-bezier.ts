@@ -1,7 +1,5 @@
-import {BezierProperties} from './types';
 import {produceSpecificAtFunction} from "./produce-specific-at";
-import {createTDeterministicTSearch} from "./deterministic-t-search";
-import {produceGenericAtFunction} from "./produce-generic-at";
+import {createDeterministicTSearch} from "./deterministic-t-search";
 
 const createSpecificAtFunction = (points: number[][]) => {
     const at = produceSpecificAtFunction(points);
@@ -13,7 +11,7 @@ const createSpecificAtFunction = (points: number[][]) => {
 };
 
 const createDetermenisticTSearchFunction = (points: number[][]) => {
-    const tSearch = createTDeterministicTSearch(points);
+    const tSearch = createDeterministicTSearch(points);
 
     if (tSearch == null)
         throw new Error("could not create deterministic function for points " + JSON.stringify(points));

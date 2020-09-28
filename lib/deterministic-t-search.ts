@@ -1,9 +1,32 @@
-import {inRange} from './util';
-
 import {solveCubicEquation, solveLinearEquation, solveQuadraticEquation} from 'linear-quadratic-cubic-eq-solver';
-
 import Complex from "linear-quadratic-cubic-eq-solver/cjs/complex";
 
+/**
+ *
+ * @param is the value the value is currently
+ * @param should what value `is` should be
+ * @param margin how far away the the value is allowed to be from the `should` result
+ *
+ * @returns < 0 if `is` is below the range of should - margin
+ *          > 0 if `is` is above the range of should + margin
+ *          = 0 if `is` is withing in the range
+ */
+const inRange = (is: number, should: number, margin: number): number => {
+    const spm = should + margin
+    if (is > spm)
+        return is - spm;
+
+    const smm = should - margin
+    if (is < smm)
+        return is - smm;
+
+    return 0;
+}
+
+/**
+ * Removes complex numbers and converts complex numbers with an imaginary part of smaller than 1e-8 to a real number.
+ * @param n
+ */
 const cleanSolutions = (n: (number | Complex)[]): number[] => {
     const k: number[] = [];
 
@@ -46,7 +69,7 @@ const solvingFunctions: Solver[] = [
     }
 ]
 
-export function createTDeterministicTSearch(points: number[][]) {
+export function createDeterministicTSearch(points: number[][]) {
     const grade = points.length;
     const dimension = points[0].length;
 

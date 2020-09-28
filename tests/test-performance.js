@@ -1,5 +1,6 @@
 const {measure, speed, defaultTestRunner} = require('performance-test-runner');
 const {runAndReport} = require('performance-test-runner/lib/suite-console-printer');
+const bezier = require('bezier');
 
 const {
     StaticBezier
@@ -12,15 +13,11 @@ const points = [
     [4, 8]
 ];
 
-// const arrayCopy = (inst, off = 0) => Array.prototype.slice.call(inst, off);
-// const args = arrayCopy(process.argv, 2);
-
-
-measure('create at', () => {
+measure('create', () => {
     // bezier has no creation
 
     speed('StaticBezier', {StaticBezier, points}, () => {
-        new StaticBezier(points)
+        new StaticBezier(points);
     });
 });
 
@@ -31,13 +28,14 @@ measure('at', () => {
         const xS = points.map(p => p[0]);
         const yS = points.map(p => p[1]);
 
-        const quadratic = require('bezier').prepare(4);
+        const quadratic = bezier.prepare(4);
 
         speed('bezier', {c, xS, yS, quadratic}, () => {
+            // changing the v value to get a better mean
             if (++c.i == 11)
                 c.i = 0;
 
-            const v = c.i / 10;
+            var v = c.i / 10;
 
             quadratic(xS, v);
             quadratic(yS, v);
@@ -48,23 +46,24 @@ measure('at', () => {
     {
         const sb = new StaticBezier(points);
         speed('StaticBezier', {c, sb}, () => {
+            // changing the v value to get a better mean
             if (++c.i == 11)
                 c.i = 0;
 
-            const v = c.i / 10;
+            var v = c.i / 10;
 
             sb.at(v);
         })
     }
 });
 
-measure('t-search', name => {
-    {
-        const sb = new StaticBezier(points);
-        speed('StaticBezier', {sb}, () => {
-            sb.tSearch(1.9, 0)
-        }) // ≈ 0.3
-    }
+measure('tSearch', name => {
+    // bezier has no t-search
+
+    const sb = new StaticBezier(points);
+    speed('StaticBezier', {sb}, () => {
+        sb.tSearch(1.9, 0)
+    }) // ≈ 0.3
 });
 
 // TODO: reimplement runnable test selection

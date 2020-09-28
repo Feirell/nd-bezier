@@ -1,4 +1,3 @@
-import {AtFunction} from "./types";
 import {produceGenericAtFunction} from "./produce-generic-at";
 
 interface SpecificAtFunction {
@@ -103,14 +102,14 @@ export function produceSpecificAtFunction(points: number[][]): SpecificAtFunctio
 
     let newFuncBody = "";
     for (let i = 0; i < places.length; i++) {
-        // every even elemnt is a string which seperates two occurences of point[p][d]
+        // every even element is a string which separates two occurrences of point[p][d]
         if (i % 2 == 0) {
-            newFuncBody += <string>places[i];
+            newFuncBody += places[i] as string;
         } else { // every odd one is an object which has to be replaced by the numeric value in points[p][d] (the function argument)
-            const para = <{ point: number, dimension: number }>places[i];
+            const para = places[i] as { point: number, dimension: number };
             newFuncBody += '' + points[para.point][para.dimension];
         }
     }
 
-    return new Function('t', newFuncBody) as SpecificAtFunction;
+    return Function('t', newFuncBody) as SpecificAtFunction;
 }

@@ -2,9 +2,10 @@
   "name": "nd-bezier",
   "version": "0.1.6",
   "main": "./cjs/static-bezier.js",
+  "types": "./cjs/static-bezier.d.ts",
   "scripts": {
     "build": "tsc",
-    "speed": "node ./tests/test-speed.js",
+    "performance": "node ./tests/test-performance.js",
     "test": "mocha ./tests/test.js"
   },
   "repository": "https://github.com/Feirell/nd-bezier.git",
