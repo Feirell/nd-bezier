@@ -1,4 +1,3 @@
-import { Bezier } from "./bezier";
 
 export interface BezierProperties {
     points: number[][];
@@ -13,7 +12,7 @@ export interface UsableFunction<T> {
      * 
      * @param bezier The bezier for which this function should generate an function T
      */
-    generate(bezier: Bezier): T | null;
+    generate(bezier: any): T | null;
 
     /**
      * Is called when there is a change in the attributes of the bezier to see if it sould be reseted

@@ -1,5 +1,8 @@
-import { UsableFunction, AtFunction, BezierProperties } from "../types";
-import { bc } from "../math-functions";
+import {bc} from "./math-functions";
+
+export interface AtFunction {
+    (points: number[][], t: number): number[];
+}
 
 interface FCacheEntry {
     body: string,
@@ -19,11 +22,10 @@ const fCache: FCacheEntry[][] = [];
 
 /**
  * This function generates an general at function which is useable for this specific cimbination of grade and dimension.
- * 
+ *
  */
-export function produceGenericAtFunction(props: BezierProperties): FCacheEntry {
-    const grade = props.grade - 1;
-    const dimension = props.dimension;
+export function produceGenericAtFunction(grade: number, dimension: number): FCacheEntry {
+    grade = grade - 1;
 
     if (fCache[grade] != undefined) {
         if (fCache[grade][dimension] != undefined)
@@ -38,16 +40,16 @@ export function produceGenericAtFunction(props: BezierProperties): FCacheEntry {
 
     /**
      * point sum is an array of strings which collect the sum of the point dimension
-     * 
+     *
      * pointSum[0]: "m0 * 1 + m1 * 2 + ..." etc.
      */
     const pointSum = new Array(dimension).fill("");
 
     /**
      * for each grade one multiplier is created
-     * 
+     *
      * const m0 = 1 * t * t * t * oneMinusT; etc.
-     * 
+     *
      * and each buffer will be extended for the current multipleier
      */
     for (let i = 0; i <= grade; i++) {
@@ -73,23 +75,10 @@ export function produceGenericAtFunction(props: BezierProperties): FCacheEntry {
     for (let i = 0; i < dimension; i++)
         pointSumConcat += "    " + pointSum[i] + (i == dimension - 1 ? "\n" : ",\n");
 
-    const body = "\"use strict\";\nconst points = bezierProperties.points;\nconst oneMinusT = 1 - t;\n" + multiplier + "return [\n" + pointSumConcat + "];";
-    const func = <AtFunction>new Function('bezierProperties', 't', body);
+    const body = "\"use strict\";\n\nconst oneMinusT = 1 - t;\n" + multiplier + "return [\n" + pointSumConcat + "];";
+    const func = new Function('points', 't', body) as AtFunction;
 
     return fCache[grade][dimension] = {
         body, func
     };
 }
-
-export default Object.freeze({
-    generate: (bezier) => {
-        const bezierProperties = bezier.getBezierProperties();
-        if (bezierProperties == null)
-            throw new Error('produced-generic need to be called with an bezier which has valid points');
-
-        return produceGenericAtFunction(bezierProperties).func;
-    },
-    shouldReset: (g, d, p) => {
-        return g || d;
-    }
-}) as UsableFunction<AtFunction>;

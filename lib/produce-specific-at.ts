@@ -1,5 +1,9 @@
-import { AtFunction, UsableFunction, BezierProperties } from "../types";
-import { produceGenericAtFunction } from "./produced-generic";
+import {AtFunction} from "./types";
+import {produceGenericAtFunction} from "./produce-generic-at";
+
+interface SpecificAtFunction {
+    (t: number): number[]
+}
 
 /*
 from: 
@@ -33,7 +37,7 @@ const pointsRegEx = /points\[(\d+)\]\[(\d+)\]/g;
 
 /**
  * transforms the given string into an array of strings and objects
- * 
+ *
  * the string will be concatenated with the objects string representation
  */
 export function getPlaces(str: string) {
@@ -71,18 +75,19 @@ export function getPlaces(str: string) {
 
 /**
  * This functions produces an specific at function which is created for an individual identity of points.
- * 
+ *
  * Speed differences:
  * - Building the whole body for each function: 140k ops/sec
  * - Using RegEx: 130k ops/sec
  * - Caching the positions of points[p][d] (this func): 230k ops/sec
- * 
+ *
  */
-function produceSpecificAtFunction(props: BezierProperties): AtFunction {
-    const points = props.points;
+export function produceSpecificAtFunction(points: number[][]): SpecificAtFunction {
+    const grade = points.length;
+    const dimension = points[0].length;
 
     // the generic function is the base for the specific one
-    const generic = produceGenericAtFunction(props);
+    const generic = produceGenericAtFunction(grade, dimension);
 
     // const generic = fCache[grade][dimension];
     let orig = generic.body;
@@ -107,20 +112,5 @@ function produceSpecificAtFunction(props: BezierProperties): AtFunction {
         }
     }
 
-    newFuncBody = newFuncBody.replace('const points = bezierProperties.points;', '');
-
-    return <AtFunction>new Function('bezierProperties', 't', newFuncBody);
+    return new Function('t', newFuncBody) as SpecificAtFunction;
 }
-
-export default Object.freeze({
-    generate: (bezier) => {
-        const bezierProperties = bezier.getBezierProperties();
-        if (bezierProperties == null)
-            throw new Error('produced-specific need to be called with an bezier which has valid points');
-
-        return produceSpecificAtFunction(bezierProperties);
-    },
-    shouldReset: (g, d, p) => {
-        return p;
-    }
-}) as UsableFunction<AtFunction>;

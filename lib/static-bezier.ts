@@ -1,32 +1,24 @@
-import ProduceSpecific from './at-functions/produced-specific';
-import Determenistic from './t-search-functions/deterministic';
-import { Bezier } from './bezier';
-import { BezierProperties } from './types';
+import {BezierProperties} from './types';
+import {produceSpecificAtFunction} from "./produce-specific-at";
+import {createTDeterministicTSearch} from "./deterministic-t-search";
+import {produceGenericAtFunction} from "./produce-generic-at";
 
 const createSpecificAtFunction = (points: number[][]) => {
-    const at = ProduceSpecific.generate({
-        getBezierProperties: () => ({
-            points,
-            grade: points.length,
-            dimension: points[0].length
-        })
-    } as Bezier);
+    const at = produceSpecificAtFunction(points);
 
     if (at == null)
         throw new Error("could not create specific function for points " + JSON.stringify(points));
 
-    return at.bind(null, null as any);
+    return at;
 };
 
 const createDetermenisticTSearchFunction = (points: number[][]) => {
-    const tSearch = Determenistic.generate({
-        getGrade: () => points.length
-    } as Bezier);
+    const tSearch = createTDeterministicTSearch(points);
 
     if (tSearch == null)
-        throw new Error("could not create determenistic function for points " + JSON.stringify(points));
+        throw new Error("could not create deterministic function for points " + JSON.stringify(points));
 
-    return tSearch.bind(null, { points } as BezierProperties);
+    return tSearch;
 }
 
 export class StaticBezier {
@@ -36,7 +28,11 @@ export class StaticBezier {
         this.tSearch = createDetermenisticTSearchFunction(points);
     }
 
-    at(t: number): number[] { throw new Error(); }
+    at(t: number): number[] {
+        throw new Error();
+    }
 
-    tSearch(value: number, dimension: number) { throw new Error(); }
+    tSearch(value: number, dimension: number) {
+        throw new Error();
+    }
 }

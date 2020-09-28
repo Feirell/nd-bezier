@@ -2,14 +2,8 @@ const {measure, speed, defaultTestRunner} = require('performance-test-runner');
 const {runAndReport} = require('performance-test-runner/lib/suite-console-printer');
 
 const {
-    Bezier,
-    StaticBezier,
-    AT_FUNCTIONS_NAMES,
-    TSEARCH_FUNCTIONS_NAMES
+    StaticBezier
 } = require('../'); // since an directory with an package.json is an package
-
-let availableTSearchNames = TSEARCH_FUNCTIONS_NAMES;
-let availableAtNames = AT_FUNCTIONS_NAMES;
 
 const points = [
     [1, 5],
@@ -23,11 +17,6 @@ const points = [
 
 
 measure('create at', () => {
-    for (const name of availableAtNames)
-        speed(name, {Bezier, points, name}, () => {
-            (new Bezier(points, name)).at(0)
-        });
-
     // bezier has no creation
 
     speed('StaticBezier', {StaticBezier, points}, () => {
@@ -37,19 +26,6 @@ measure('create at', () => {
 
 measure('at', () => {
     let c = {i: 0};
-
-    for (const name of availableAtNames) {
-        const instance = new Bezier(points, name);
-        speed(name, {instance, c}, () => {
-            if (++c.i == 11)
-                c.i = 0;
-
-            const v = c.i / 10;
-
-            instance.at(v)
-        })
-    }
-
 
     {
         const xS = points.map(p => p[0]);
@@ -83,14 +59,6 @@ measure('at', () => {
 });
 
 measure('t-search', name => {
-
-    for (const name of availableTSearchNames) {
-        const instance = new Bezier(points, undefined, name);
-        speed(name, {instance}, () => {
-            instance.tSearch(1.9, 0)
-        }) // ≈ 0.3
-    }
-
     {
         const sb = new StaticBezier(points);
         speed('StaticBezier', {sb}, () => {
