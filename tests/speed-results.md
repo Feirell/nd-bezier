@@ -150,3 +150,16 @@ t-search
   DETERMENISTIC         952,550 1.01      88    15.56
   StaticBezier        3,694,882 1.34      89    60.35
 ```
+
+Release 1.0.0 on laptop with node 12
+
+```text
+                   ops/sec  MoE samples relative
+create
+  StaticBezier     374,601 1.74      79     1.00
+at
+  bezier       242,542,915 1.49      90     1.00
+  StaticBezier 511,091,959 3.28      92     2.11
+tSearch
+  StaticBezier  10,902,462 4.24      83     1.00
+```
