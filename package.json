@@ -1,8 +1,8 @@
 {
   "name": "nd-bezier",
   "version": "0.1.6",
-  "main": "./cjs/static-bezier.js",
-  "types": "./cjs/static-bezier.d.ts",
+  "main": "./lib/static-bezier.js",
+  "types": "./lib/static-bezier.d.ts",
   "scripts": {
     "build": "tsc",
     "performance": "node ./tests/test-performance.js",
@@ -22,7 +22,7 @@
     "typescript": "^4.0.2"
   },
   "files": [
-    "cjs"
+    "lib"
   ],
   "bugs": {
     "url": "https://github.com/Feirell/nd-bezier/issues"

@@ -6,9 +6,9 @@
         "removeComments": false,
         "moduleResolution": "node",
         "module": "commonjs",
-        "outDir": "cjs"
+        "outDir": "lib"
     },
     "files": [
-        "./lib/static-bezier.ts"
+      "./src/static-bezier.ts"
     ]
 }
