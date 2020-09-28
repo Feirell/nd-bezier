@@ -127,3 +127,26 @@ t-search
   DETERMENISTIC         806,258 0.95      90    16.72
   StaticBezier        2,904,049 1.48      90    60.22
 ```
+
+With the new runner on the laptop (node 12)
+
+```text
+                        ops/sec  MoE samples relative
+create at
+  ND_CUBIC              318,236 5.55      81     1.78
+  ND_ITERATIV           307,839 1.13      88     1.72
+  PRODUCED_GENERIC      320,982 1.08      88     1.80
+  PRODUCED_SPECIFIC     178,495 1.05      92     1.00
+  StaticBezier          324,084 1.13      91     1.82
+at
+  ND_CUBIC            2,960,096 1.61      88     2.91
+  ND_ITERATIV         1,018,199 0.92      93     1.00
+  PRODUCED_GENERIC  468,023,171 1.44      92   459.66
+  PRODUCED_SPECIFIC 539,029,293 0.67      95   529.39
+  bezier            218,055,964 5.09      83   214.16
+  StaticBezier      539,438,031 0.75      94   529.80
+t-search
+  BINARY_SEARCH          61,225 1.24      90     1.00
+  DETERMENISTIC         952,550 1.01      88    15.56
+  StaticBezier        3,694,882 1.34      89    60.35
+```

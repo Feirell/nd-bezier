@@ -1,7 +1,5 @@
 const {measure, speed, defaultTestRunner} = require('performance-test-runner');
-const {printSuiteState} = require('performance-test-runner/lib/suite-console-printer');
-
-const quadratic = require('bezier').prepare(4);
+const {runAndReport} = require('performance-test-runner/lib/suite-console-printer');
 
 const {
     Bezier,
@@ -10,8 +8,8 @@ const {
     TSEARCH_FUNCTIONS_NAMES
 } = require('../'); // since an directory with an package.json is an package
 
-let availableTSearchNames = [...TSEARCH_FUNCTIONS_NAMES, 'StaticBezier', 'bezier'];
-let availableAtNames = [...AT_FUNCTIONS_NAMES, 'StaticBezier', 'bezier'];
+let availableTSearchNames = TSEARCH_FUNCTIONS_NAMES;
+let availableAtNames = AT_FUNCTIONS_NAMES;
 
 const points = [
     [1, 5],
@@ -20,76 +18,85 @@ const points = [
     [4, 8]
 ];
 
-global.require = require;
-
-const arrayCopy = (inst, off = 0) => Array.prototype.slice.call(inst, off);
-const args = arrayCopy(process.argv, 2);
+// const arrayCopy = (inst, off = 0) => Array.prototype.slice.call(inst, off);
+// const args = arrayCopy(process.argv, 2);
 
 
-// measure('create at', () => {
-//     for (const name of availableAtNames)
-//         if (name == 'bezier') {
-//             // there is no creation
-//         } else if (name == 'StaticBezier')
-//             speed(name, () => {
-//                 new StaticBezier(points)
-//             })
-//         else
-//             speed(name, () => {
-//                 (new Bezier(points, name)).at(0)
-//             })
-// });
+measure('create at', () => {
+    for (const name of availableAtNames)
+        speed(name, {Bezier, points, name}, () => {
+            (new Bezier(points, name)).at(0)
+        });
+
+    // bezier has no creation
+
+    speed('StaticBezier', {StaticBezier, points}, () => {
+        new StaticBezier(points)
+    });
+});
 
 measure('at', () => {
-    const xS = points.map(p => p[0]);
-    const yS = points.map(p => p[1]);
+    let c = {i: 0};
 
-    let i = 0;
+    for (const name of availableAtNames) {
+        const instance = new Bezier(points, name);
+        speed(name, {instance, c}, () => {
+            if (++c.i == 11)
+                c.i = 0;
 
-    for (const name of availableAtNames)
-        if (name == 'bezier') {
-            speed('bezier', () => {
-                if (++i == 11)
-                    i = 0;
+            const v = c.i / 10;
 
-                const v = i / 10;
+            instance.at(v)
+        })
+    }
 
-                quadratic(xS, v);
-                quadratic(yS, v);
-            })
-        } else if (name == 'StaticBezier') {
-            const sb = new StaticBezier(points);
-            speed(name, () => {
-                if (++i == 11)
-                    i = 0;
 
-                const v = i / 10;
+    {
+        const xS = points.map(p => p[0]);
+        const yS = points.map(p => p[1]);
 
-                sb.at(v);
-            })
-        } else {
-            // const instance = new Bezier(points, name);
-            speed(name, () => {
-                instance.at(v)
-            })
-        }
+        const quadratic = require('bezier').prepare(4);
+
+        speed('bezier', {c, xS, yS, quadratic}, () => {
+            if (++c.i == 11)
+                c.i = 0;
+
+            const v = c.i / 10;
+
+            quadratic(xS, v);
+            quadratic(yS, v);
+        })
+    }
+
+
+    {
+        const sb = new StaticBezier(points);
+        speed('StaticBezier', {c, sb}, () => {
+            if (++c.i == 11)
+                c.i = 0;
+
+            const v = c.i / 10;
+
+            sb.at(v);
+        })
+    }
 });
 
 measure('t-search', name => {
-    for (const name of availableTSearchNames)
-        if (name == 'bezier') {
 
-        } else if (name == 'StaticBezier') {
-            const sb = new StaticBezier(points);
-            speed(name, () => {
-                sb.tSearch(1.9, 0)
-            }) // ≈ 0.3
-        } else {
-            const instance = new Bezier(points, undefined, name);
-            speed(name, () => {
-                instance.tSearch(1.9, 0)
-            }) // ≈ 0.3
-        }
+    for (const name of availableTSearchNames) {
+        const instance = new Bezier(points, undefined, name);
+        speed(name, {instance}, () => {
+            instance.tSearch(1.9, 0)
+        }) // ≈ 0.3
+    }
+
+    {
+        const sb = new StaticBezier(points);
+        speed('StaticBezier', {sb}, () => {
+            sb.tSearch(1.9, 0)
+        }) // ≈ 0.3
+    }
 });
 
 // TODO: reimplement runnable test selection
@@ -112,16 +119,4 @@ measure('t-search', name => {
 
 // TestGroup.testAllGroups(true);
 
-(async () => {
-    const firstLogger = printSuiteState(defaultTestRunner, {printOnCycle: true, framerate: 30});
-    await defaultTestRunner.runSuite();
-    await firstLogger;
-})()
-    .catch(err => {
-        let actualError = err;
-        if (err.type == 'error')
-            actualError = err.message;
-
-        console.error(actualError);
-        process.exit(1);
-    });
+runAndReport(defaultTestRunner);
