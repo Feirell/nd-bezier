@@ -34,71 +34,87 @@ function oneInRange(isses, should, range = 1e-5) {
     assert.fail('[' + isses + '] is not in the range of ' + should);
 }
 
-describe('Bezier', () => {
-    const holdingPointVariations = [
-        {
-            holdingPoint: [[0, 2], [1, 1], [2, 0]],
-            solutions: [{
-                dimension: 1,
-                xValue: 1.8,
-                tValue: 0.1
-            }]
-        },
-        {
-            holdingPoint: [[0, 0], [2, 1]],
-            solutions: [{
-                dimension: 0,
-                xValue: 1,
-                tValue: 0.5
-            }]
-        }, {
-            holdingPoint: [[0, 0], [0, 1], [1, 1]],
-            solutions: [{
-                dimension: 0,
-                xValue: 0.25,
-                tValue: 0.5
-            }]
-        }, {
-            holdingPoint: [[0, 0], [1, 0], [0, 1], [1, 1]],
-            solutions: [{
-                dimension: 0,
+const holdingPointVariations = [
+    {
+        holdingPoint: [[0, 2], [1, 1], [2, 0]],
+        tSearchSolutions: [{
+            dimension: 1,
+            xValue: 1.8,
+            tValue: 0.1
+        }],
+        atResults: []
+    },
+    {
+        holdingPoint: [[0, 0], [2, 1]],
+        tSearchSolutions: [{
+            dimension: 0,
+            xValue: 1,
+            tValue: 0.5
+        }],
+        atResults: []
+    }, {
+        holdingPoint: [[0, 0], [0, 1], [1, 1]],
+        tSearchSolutions: [{
+            dimension: 0,
+            xValue: 0.25,
+            tValue: 0.5
+        }],
+        atResults: []
+    }, {
+        holdingPoint: [[0, 0], [1, 0], [0, 1], [1, 1]],
+        tSearchSolutions: [{
+            dimension: 0,
+            xValue: 0.468,
+            tValue: 0.3
+        }],
+        atResults: [
+            {
+                tValue: 0.3,
                 xValue: 0.468,
-                tValue: 0.3
-            }]
-        }];
+                yValue: 0.216
+            },
+            {
+                tValue: 0,
+                xValue: 0,
+                yValue: 0
+            },
+            {
+                tValue: 1,
+                xValue: 1,
+                yValue: 1
+            }
+        ]
+    }];
 
-    describe('StaticBezier at', () => {
-        const quadratic = holdingPointVariations[3];
+describe('at', () => {
+    for (const {holdingPoint, atResults} of holdingPointVariations) {
+        if (atResults.length == 0)
+            continue;
 
-        const bezier = new StaticBezier(quadratic.holdingPoint);
-
-        it('bezier.at(0.3) ≈ [0.468, 0.216]', () => {
-            const res = bezier.at(0.3);
-            inRangeArr(res, [0.468, 0.216]);
-        });
-
-        it('bezier.at(0) ≈ [0, 0]', () => {
-            const res = bezier.at(0);
-            inRangeArr(res, [0, 0]);
-        });
-
-        it('bezier.at(1) ≈ [1, 1]', () => {
-            const res = bezier.at(1);
-            inRangeArr(res, [1, 1]);
-        });
-    })
-
-    describe('StaticBezier tSearch', () => {
-
-        for (const {holdingPoint, solutions} of holdingPointVariations) {
+        describe('holding points ' + JSON.stringify(holdingPoint), () => {
             const bezier = new StaticBezier(holdingPoint);
 
-            for (const {xValue, dimension, tValue} of solutions)
+            for (const {tValue, xValue, yValue} of atResults) {
+                it('bezier.at(' + tValue + ') ≈ [' + xValue + ', ' + yValue + ']', () => {
+                    const res = bezier.at(tValue);
+                    inRangeArr(res, [xValue, yValue]);
+                });
+            }
+        });
+    }
+});
+
+describe('tSearch', () => {
+    for (const {holdingPoint, tSearchSolutions} of holdingPointVariations) {
+        const bezier = new StaticBezier(holdingPoint);
+
+        describe('holding points ' + JSON.stringify(holdingPoint), () => {
+            for (const {xValue, dimension, tValue} of tSearchSolutions)
                 it('bezier.tSearch(' + xValue + ', ' + dimension + ') ≈ ' + tValue, () => {
                     const res = bezier.tSearch(xValue, dimension);
                     oneInRange(res, tValue, 1e-4);
                 });
+        });
 
-        }
-    });
+    }
 });
