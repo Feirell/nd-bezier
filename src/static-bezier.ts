@@ -92,7 +92,7 @@ export class StaticBezier {
 
     offsetPointRight(t: number, distance: number): number[] {
         if (this.points[0].length == 2) {
-            this.offsetPointRight = createSpecificOffsetAtFunction(this.points, leftMatrix);
+            this.offsetPointRight = createSpecificOffsetAtFunction(this.points, rightMatrix);
         } else {
             this.offsetPointRight = () => {
                 throw new Error('can not get the offset point in a ' + this.points[0].length + '-dimensional Bezier,' +

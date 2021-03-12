@@ -3,15 +3,13 @@
 [![npm](https://img.shields.io/npm/v/nd-bezier.svg)](https://www.npmjs.com/package/nd-bezier)
 [![GitHub issues](https://img.shields.io/github/issues/Feirell/nd-bezier.svg)](https://github.com/Feirell/nd-bezier/issues)
 
-This package aims to help with the usage of n-dimensional Bezièr curves. Those curves are mostly used to model paths or interpolate between values.
+This package aims to help with the usage of n-dimensional Bézier curves. Those curves are mostly used to model paths or to interpolate between values.
 
-The difference between this package and many others is that it tries to calculate the values for the provided t as fast a possible. For example this package is about 220% (228 million to 515 million calls per second) faster than the [`bezier`](https://npmjs.org/package/bezier) package.
+Alot of work has gone into making this package as fast as possible, have a look at the performance section.
 
-Additionally, this package provides the reverse operation for the Bézier `at` operation, the tSearch. This function gives you all t which satisfy the given value in a specific dimension. You can search for a value on all dimensions. This function is deterministic and defined for all Bézier curves with the degree from 2 to 4 (inclusive), which covers many use cases.
+Additionally, this package provides the reverse operation for the Bézier `at` operation, the tSearch as well as other utility functions. This function gives you all t which satisfy the given value in a specific dimension. You can search for a value on all dimensions. This function is deterministic and defined for all Bézier curves with the degree from 2 to 4 (inclusive), which covers many use cases.
 
 ## API
-
-
 
 ### `new StaticBezier(points: number[][])`
 
@@ -29,14 +27,14 @@ This function returns all valid `t` which produce the given `value` in that `dim
 
 #### `direction(t: number): number[]`
 
-With this function you can get the direction of the Beziér curve at the specified `t`. The Result is the direction vector.
+With this function you can get the direction of the Beziér curve at the specified `t` the Result is the direction vector.
 
 #### `offsetPointLeft(t: number, distance: number): number[]`
 
 This function is a utility function which adds the `direction` vector in a 90° to the left of the `at` vector at the specified `t`.
 The direction vector will be set to the specified length. The resulting new curve can be interpreted as an offset Beziér curve, but
 be aware that this approach will fail when the curve defined by the points has a to narrow curvature. See [this example](https://feirell.github.io/offset-bezier/)
-move the orange points of a and b together and see how the black lines from a morphed to d morphed collaps. Enable the "Spikes for offset bezier" in the lower right to see why this happens.
+move the orange points of a and b together and see how the black lines parallel to the central curve collapse. Enable the "Spikes for offset bezier" in the lower right to see why this happens.
 
 #### `offsetPointRight(t: number, distance: number): number[]`
 
@@ -44,16 +42,17 @@ Works the same way `offsetPointsLeft` works but adds the `direction` to the righ
 
 ## examples
 
-```typescript
+```javascript
 import {StaticBezier} from "nd-bezier";
 
 const points = [[0, 0], [1, 0], [0, 1], [1, 1]];
 
 const b = new StaticBezier(points);
-b.at(0.3) // returns [0.448, 0.216]
 
-// 0 == first dimension == x dimension 
-b.tSearch(0.468, 0) // returns [0.3]
+b.at(0.3) // returns [0.468, 0.216]
+
+// 0 == first dimension, 1 == second dimension
+b.tSearch(0.468, 0) // returns [ 0.3 ]
 b.tSearch(0.216, 1) // returns [ 1.448528137423857, -0.24852813742385704, 0.3 ]
 ```
 
@@ -69,7 +68,7 @@ npm run performance
 
 Feel free to add other libraries and create a pull request.
 
-The latest results:
+The result of the latest version:
 
 ```text
                          ops/sec  MoE samples relative
@@ -101,8 +100,8 @@ offset point
 > `bezier` refers to the [bezier package](https://www.npmjs.com/package/bezier), StaticBezier is the export of this package.
 > The tests can be found in tests/test-performance.js
 
-As you can see StaticBezier is about 3.82 times faster than, for example, the bezier package. But this comes at the cost that the creation time is lower.
-So if you often need to change the control points and then calculate one or two points for this curve, then you should use the bezier package.
+As you can see StaticBezier is about 3.82 times faster than, for example, the bezier package, but this comes at the cost that the creation time is lower.
+So if you often need to change the control points and then calculate one or two points for this curve, then you should use another Bézier package.
 
-If you need to calculate multiple values of the curve or your bezier has static control points, then the StaticBezier provides you with a faster and
+If you need to calculate multiple values of the curve, or your bezier has static control points, then the StaticBezier provides you with a faster and
 more versatile alternative.
