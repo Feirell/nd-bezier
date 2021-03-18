@@ -1,11 +1,10 @@
 {
+    "extends": "@tsconfig/node12/tsconfig.json",
+
     "compilerOptions": {
-        "target": "es6",
         "declaration": true,
         "strict": true,
         "removeComments": false,
-        "moduleResolution": "node",
-        "module": "commonjs",
         "outDir": "lib"
     },
     "files": [

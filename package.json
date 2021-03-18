@@ -16,6 +16,7 @@
     "linear-quadratic-cubic-eq-solver": "^0.0.4"
   },
   "devDependencies": {
+    "@tsconfig/node12": "^1.0.7",
     "bezier": "^0.1.0",
     "mocha": "^8.3.1",
     "performance-test-runner": "^0.1.1",
