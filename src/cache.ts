@@ -1,4 +1,30 @@
-const DEFAULT_KEY_GENERATOR = <Keys extends any[]>(keys: Keys): string => JSON.stringify(keys);
+const functionId = (() => {
+    const wm = new WeakMap<() => void, number>();
+    let counter = 0;
+
+    return (fnc: () => void) => {
+        let ret = wm.get(fnc);
+        if (ret === undefined)
+            wm.set(fnc, ret = counter++);
+
+        return ret;
+    }
+})();
+
+const valueMapper = (key: string, value: any) => {
+    const type = typeof value;
+
+    if (type == "number" || type == "string")
+        return value;
+    else if (type == "function")
+        return functionId(value);
+    else if (type == "object")
+        return value;
+    else
+        throw new Error('can not set ' + type + ' as key for cache table ' + JSON.stringify(value));
+}
+
+const DEFAULT_KEY_GENERATOR = <Keys extends any[]>(keys: Keys): string => JSON.stringify(keys, valueMapper);
 
 export class Cache<Keys extends any[], Value> {
     private readonly backing = new Map<string, Value>();

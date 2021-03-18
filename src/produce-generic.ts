@@ -135,7 +135,7 @@ export function assembleBezierFunction(kFunction: MultiplierProvider, grade: num
     if (cacheItem)
         return {...cacheItem};
 
-    const base = produceMultiplierAndComponents(grade, dimension, 'b' /* for base */, bezierMultiplier)
+    const base = produceMultiplierAndComponents(grade, dimension, 'b' /* for base */, kFunction)
 
     let pointSumConcat = "";
 
@@ -199,7 +199,7 @@ function assembleOffsetAtFunction(grade: number, dimension: number, matrix: numb
         return {...cacheItem};
 
     const base = produceMultiplierAndComponents(grade, dimension, 'b' /* for base */, bezierMultiplier);
-    const derived = produceMultiplierAndComponents(grade, dimension, 'd' /* for base */, bezierMultiplierDerived);
+    const derived = produceMultiplierAndComponents(grade, dimension, 'd' /* for derived */, bezierMultiplierDerived);
 
     let derivedLength = ""
 
