@@ -1,4 +1,4 @@
-import {NrRange} from "ts-number-range";
+import {NrRange} from "./number-ranger";
 
 // got this from https://stackoverflow.com/a/52490977
 type Tuple<T, N extends number> = N extends N ? number extends N ? T[] : _TupleOf<T, N, []> : never;

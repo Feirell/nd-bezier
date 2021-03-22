@@ -1,9 +1,10 @@
 import {NrTuple, Points, StaticBezier as SB} from "./bezier-definitions";
 import {atFunction, directionFunction} from "./body-constructor/bezier-function";
 import {offsetPointLeftFunction, offsetPointRightFunction} from "./body-constructor/offset-bezier-function";
-import {NrRange} from "ts-number-range";
+
 import {tSearchFunction} from "./body-constructor/t-search-function";
 import {nearestTFunction} from "./body-constructor/nearest-t-body-function";
+import {NrRange} from "./number-ranger";
 
 function checkAndCopyPoints<Grade extends number, Dimension extends number>(points: Points<Grade, Dimension>) {
     if (!Array.isArray(points))

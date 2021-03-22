@@ -2,11 +2,6 @@
 # yarn lockfile v1
 
 
-"@tsconfig/node12@^1.0.7":
-  version "1.0.7"
-  resolved "https://registry.yarnpkg.com/@tsconfig/node12/-/node12-1.0.7.tgz#677bd9117e8164dc319987dd6ff5fc1ba6fbf18b"
-  integrity sha512-dgasobK/Y0wVMswcipr3k0HpevxFJLijN03A8mYfEPvWvOs14v0ZlYTR4kIgMx8g4+fTyTFv8/jLCIfRqLDJ4A==
-
 "@types/color-name@^1.1.1":
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/@types/color-name/-/color-name-1.1.1.tgz#1c1261bbeaa10a8055bbc5d8ab84b7b2afc846a0"
@@ -550,11 +545,6 @@ to-regex-range@^5.0.1:
   integrity sha512-65P7iz6X5yEr1cwcgvQxbbIw7Uk3gOy5dIdtZ4rDveLqhrdJP+Li/Hx6tyK0NEb+2GCyneCMJiGqrADCSNk8sQ==
   dependencies:
     is-number "^7.0.0"
-
-ts-number-range@^1.0.0:
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/ts-number-range/-/ts-number-range-1.0.0.tgz#006300f18514178a36e297295c6e84cc007a133f"
-  integrity sha512-4t0hJBmjG7lXZ+ctQgqld3fuStj0YUGv4E498PuC6CcOl/I2khM8GTlpI1sTauEfycJSDR3ISqz/VXKKvCZrEQ==
 
 typescript@^4.2.3:
   version "4.2.3"
