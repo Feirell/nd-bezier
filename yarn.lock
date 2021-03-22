@@ -551,6 +551,11 @@ to-regex-range@^5.0.1:
   dependencies:
     is-number "^7.0.0"
 
+ts-number-range@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/ts-number-range/-/ts-number-range-1.0.0.tgz#006300f18514178a36e297295c6e84cc007a133f"
+  integrity sha512-4t0hJBmjG7lXZ+ctQgqld3fuStj0YUGv4E498PuC6CcOl/I2khM8GTlpI1sTauEfycJSDR3ISqz/VXKKvCZrEQ==
+
 typescript@^4.2.3:
   version "4.2.3"
   resolved "https://registry.yarnpkg.com/typescript/-/typescript-4.2.3.tgz#39062d8019912d43726298f09493d598048c1ce3"

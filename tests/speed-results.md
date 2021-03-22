@@ -163,3 +163,64 @@ at
 tSearch
   StaticBezier  10,902,462 4.24      83     1.00
 ```
+
+```text
+                            ops/sec  MoE samples relative
+create
+  bezier
+    just prepare        102,606,329 0.54      95     1.82
+    with at call         56,440,504 0.69      93     1.00
+  StaticBezier
+    just prepare        674,961,397 0.64      84 4,198.16
+    with at call            160,775 0.96      90     1.00
+  new StaticBezier
+    just prepare        569,116,279 0.44      95 2,319.18
+    with at call            245,395 1.24      84     1.00
+  new DynamicBezier
+    one time generation   7,442,498 0.66      92     1.00
+    just prepare        718,223,924 0.22      97    96.50
+    with at call         29,816,670 1.87      89     4.01
+at
+  bezier
+    different values     91,475,989 3.81      89     1.00
+    same value          712,090,482 0.56      97     7.78
+  StaticBezier
+    different values    356,510,694 0.50      96     1.00
+    same value          726,582,836 0.43      97     2.04
+  new StaticBezier
+    different values    356,688,823 0.66      95     1.00
+    same value          734,018,611 0.30      98     2.06
+  new DynamicBezier
+    different values     25,565,441 0.68      95     1.00
+    same value           38,408,268 0.46      94     1.50
+tSearch
+  StaticBezier
+    different values     10,099,626 0.40      95     1.00
+    same value           12,232,872 0.96      89     1.21
+  new StaticBezier
+    different values      8,964,652 0.32      96     1.00
+    same value           10,303,002 0.35      96     1.15
+  new DynamicBezier
+    different values      7,735,209 1.03      92     1.00
+    same value            9,743,949 0.26      97     1.26
+direction
+  StaticBezier
+    different values    437,773,110 0.35      97     1.00
+    same value          719,520,578 0.63      96     1.64
+  new StaticBezier
+    different values    441,247,094 0.21      97     1.00
+    same value          734,906,792 0.20      96     1.67
+  new DynamicBezier
+    different values     26,990,343 0.73      91     1.00
+    same value           37,433,240 1.18      88     1.39
+offset point
+  StaticBezier
+    different values    416,500,679 0.53      96     1.00
+    same value          712,094,411 0.63      96     1.71
+  new StaticBezier
+    different values    409,007,704 1.00      93     1.00
+    same value          713,123,229 0.64      89     1.74
+  new DynamicBezier
+    different values     13,061,666 0.47      96     1.00
+    same value           14,332,017 0.74      95     1.10
+```

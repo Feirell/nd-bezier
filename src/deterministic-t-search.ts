@@ -89,7 +89,7 @@ export function createDeterministicTSearch(points: number[][]) {
 
     const func = solvingFunctions[grade - 2];
 
-    return (v: number, d: number) => {
+    return (d: number, v: number) => {
         return func(dimensionalSplit[d], v);
     }
 }

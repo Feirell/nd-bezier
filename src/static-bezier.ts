@@ -66,7 +66,7 @@ export class StaticBezier {
         return this.direction(t);
     }
 
-    tSearch(value: number, dimension: number): number[] {
+    tSearch(dimension: number, value: number): number[] {
         if (this.points.length > 4)
             this.tSearch = () => {
                 throw new Error('can not t search with a grade greater than 4')

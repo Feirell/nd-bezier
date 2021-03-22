@@ -2,7 +2,12 @@ const {measure, speed, defaultTestRunner} = require('performance-test-runner');
 const {runAndReport} = require('performance-test-runner/lib/suite-console-printer');
 
 const bezier = require('bezier');
-const {StaticBezier} = require('../'); // since an directory with an package.json is an package
+
+const {StaticBezier} = require('../lib/src/static-bezier');
+
+const {getDynamicBezier} = require('../lib/new-src/dynamic-bezier');
+
+const {StaticBezier: NewStaticBezier} = require("../lib/new-src/static-bezier");
 
 const points = [
     [1, 5],
@@ -11,6 +16,17 @@ const points = [
     [4, 8]
 ];
 
+const gdb = getDynamicBezier;
+
+const NewDynamicBezier = gdb(4, 2);
+
+const variations = [
+    ['StaticBezier', new StaticBezier(points)],
+    ['new DynamicBezier', new NewDynamicBezier(points)],
+    ['new StaticBezier', new NewStaticBezier(points)],
+];
+
+
 measure('create', () => {
     measure('bezier', () => {
         speed('just prepare', {bezier}, () => {
@@ -18,9 +34,11 @@ measure('create', () => {
         });
 
         const xs = points.map(v => v[0]);
-        speed('with at call', {bezier, xs}, () => {
+        const ys = points.map(v => v[1]);
+        speed('with at call', {bezier, xs, ys}, () => {
             const prep = bezier.prepare(4);
             prep(xs, .3);
+            prep(ys, .3);
         });
     });
 
@@ -31,6 +49,32 @@ measure('create', () => {
 
         speed('with at call', {StaticBezier, points}, () => {
             const inst = new StaticBezier(points);
+            inst.at(.3);
+        });
+    });
+
+    measure('new StaticBezier', () => {
+        speed('just prepare', {NewStaticBezier, points}, () => {
+            new NewStaticBezier(points);
+        });
+
+        speed('with at call', {NewStaticBezier, points}, () => {
+            const inst = new NewStaticBezier(points);
+            inst.at(.3);
+        });
+    });
+
+    measure('new DynamicBezier', () => {
+        speed('one time generation', {gdb}, () => {
+            gdb(4, 2);
+        });
+
+        speed('just prepare', {NewDynamicBezier, points}, () => {
+            new NewDynamicBezier(points);
+        });
+
+        speed('with at call', {NewDynamicBezier, points}, () => {
+            const inst = new NewDynamicBezier(points);
             inst.at(.3);
         });
     });
@@ -61,76 +105,90 @@ measure('at', () => {
         })
     });
 
-    measure('StaticBezier', () => {
-        const sb = new StaticBezier(points);
-        speed('different values', {c, sb}, () => {
-            // changing the t value to get a better mean
-            if (++c.i == 11)
-                c.i = 0;
+    for (const [name, instance] of variations) {
+        measure(name, () => {
+            speed('different values', {c, instance}, () => {
+                // changing the t value to get a better mean
+                if (++c.i == 11)
+                    c.i = 0;
 
-            const v = c.i / 10;
+                const v = c.i / 10;
 
-            sb.at(v);
-        })
+                instance.at(v);
+            })
 
-        speed('same value', {c, sb}, () => {
-            sb.at(.3);
-        })
-    });
+            speed('same value', {c, instance}, () => {
+                instance.at(.3);
+            })
+        });
+    }
 });
+
 
 measure('tSearch', () => {
-    const sb = new StaticBezier(points);
+    for (const [name, instance] of variations) {
+        measure(name, () => {
+            const values = new Array(11).fill([0, 0]).map((v, i) => instance.at(i / 10));
 
-    const values = new Array(11).fill([0, 0]).map((v, i) => sb.at(i / 10));
+            let c = {d: 0, i: 0};
 
-    let c = {d: 0};
+            speed('different values', {c, instance, values}, () => {
+                if (++c.i == 11)
+                    c.i = 0;
 
-    speed('different values', {c, sb, values}, () => {
-        if (++c.d == 2)
-            c.d = 0;
+                if (++c.d == 2)
+                    c.d = 0;
 
-        sb.tSearch(values[c.d], c.d);
-    });
+                instance.tSearch(c.d, values[c.i][c.d]);
+            });
 
-    speed('same value', {sb}, () => {
-        sb.tSearch(1.9, 0)
-    }); // ≈ 0.3
+            speed('same value', {instance}, () => {
+                instance.tSearch(0, 1.9)
+            }); // ≈ 0.3
+        });
+    }
 });
 
+
 measure('direction', () => {
-    const sb = new StaticBezier(points);
+    for (const [name, instance] of variations) {
+        measure(name, () => {
+            let c = {i: 0};
 
-    let c = {i: 0};
+            speed('different values', {c, instance}, () => {
+                if (++c.i == 2)
+                    c.i = 0;
 
-    speed('different values', {c, sb}, () => {
-        if (++c.i == 2)
-            c.i = 0;
+                instance.direction(c.i / 10);
+            });
 
-        sb.direction(c.i / 10);
-    });
+            speed('same value', {instance}, () => {
+                instance.direction(.3);
+            });
 
-    speed('same value', {sb}, () => {
-        sb.direction(.3);
-    });
+        })
+    }
 });
 
 measure('offset point', () => {
-    const sb = new StaticBezier(points);
+    for (const [name, instance] of variations) {
+        measure(name, () => {
+            let c = {i: 0};
 
-    let c = {i: 0};
+            speed('different values', {c, instance}, () => {
+                if (++c.i == 2)
+                    c.i = 0;
 
-    speed('different values', {c, sb}, () => {
-        if (++c.i == 2)
-            c.i = 0;
+                instance.offsetPointLeft(c.i / 10, 100);
+            });
 
-        sb.offsetPointLeft(c.i / 10, 100);
-    });
-
-    speed('same value', {sb}, () => {
-        sb.offsetPointLeft(.3, 100);
-    });
+            speed('same value', {instance}, () => {
+                instance.offsetPointLeft(.3, 100);
+            });
+        })
+    }
 });
+
 
 // TODO: reimplement runnable test selection
 

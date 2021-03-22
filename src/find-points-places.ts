@@ -33,12 +33,14 @@ const cache = new Map<string, ReturnType<typeof getPlaces>>();
 // const pointsRegEx = /points\[(\d+)\]\[(\d+)\]/g;
 const pointsRegEx = new RegExp(ID_POINTS + "\\[(\\d+)\\]\\[(\\d+)\\]", 'g');
 
+export type PointsPlaces = (string | { point: number, dimension: number })[];
+
 /**
  * transforms the given string into an array of strings and objects
  *
  * the string will be concatenated with the objects string representation
  */
-export function getPlaces(str: string): (string | { point: number, dimension: number })[] {
+export function getPlaces(str: string): PointsPlaces {
     // looking up cache and returning that value if it was already produced
     const cacheEntry = cache.get(str);
     if (cacheEntry)
