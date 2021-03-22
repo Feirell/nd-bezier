@@ -258,3 +258,37 @@ nearestT
     different values   4,606,099 0.47      96     1.00
     same value         4,805,591 1.66      93     1.04
 ```
+
+```text
+                         ops/sec  MoE samples relative
+create
+  bezier
+    just prepare      97,621,844 0.62      90     1.70
+    with at call      57,584,289 0.72      89     1.00
+  StaticBezier
+    just prepare       3,162,669 0.53      93    17.68
+    with at call         178,892 2.03      90     1.00
+at
+  bezier
+    different values 110,662,674 0.83      90     1.00
+    same value       654,401,773 0.64      95     5.91
+  StaticBezier
+    different values 325,996,952 2.95      93     1.00
+    same value       674,542,248 0.65      94     2.07
+tSearch
+  StaticBezier
+    different values   6,264,139 1.75      89     1.00
+    same value         7,322,656 1.00      88     1.17
+direction
+  StaticBezier
+    different values 406,979,752 0.53      93     1.00
+    same value       669,016,650 2.17      92     1.64
+offset point
+  StaticBezier
+    different values 385,832,153 1.00      89     1.00
+    same value       674,512,727 1.13      90     1.75
+nearestT
+  StaticBezier
+    different values   4,463,967 0.81      91     1.00
+    same value         4,673,739 1.18      88     1.05
+```

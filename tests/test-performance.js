@@ -126,7 +126,7 @@ measure('at', () => {
 });
 
 
-measure('tSearch', () => {
+measure('findTs', () => {
     for (const [name, instance] of variations) {
         measure(name, () => {
             const values = new Array(11).fill([0, 0]).map((v, i) => instance.at(i / 10));
@@ -190,7 +190,7 @@ measure('offset point', () => {
     }
 });
 
-measure('nearestT', () => {
+measure('nearestTs', () => {
     const testPoints = [
         [0, 0],
         [5, 5],
@@ -206,11 +206,11 @@ measure('nearestT', () => {
                 if (++c.i == 4)
                     c.i = 0;
 
-                instance.nearestT(testPoints[c.i]);
+                instance.nearestTs(testPoints[c.i]);
             });
 
             speed('same value', {instance}, () => {
-                instance.nearestT([5, 5]);
+                instance.nearestTs([5, 5]);
             });
         });
     }

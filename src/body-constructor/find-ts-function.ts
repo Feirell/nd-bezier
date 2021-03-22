@@ -8,7 +8,7 @@ import {constructBezierCoefficientForDimension} from "../section-constructor/bez
 import {FunctionBodyHandler} from "./function-body-handler";
 import {getPolynomialSolver} from "./polynomial-solver";
 
-export function constructTSearchBody(grade: number, dimension: number, cleanSolutions = true) {
+export function constructFindTsBody(grade: number, dimension: number, cleanSolutions = true) {
     if (grade < 2 || grade > 4)
         throw new Error('can not construct t search for a grade other than 2, 3 or 4.');
 
@@ -56,13 +56,13 @@ export function constructTSearchBody(grade: number, dimension: number, cleanSolu
     return retStr;
 }
 
-export const tSearchFunction = new FunctionBodyHandler(
-    "tSearch",
+export const findTsFunction = new FunctionBodyHandler(
+    "findTs",
     (grade: number, dimension: number, cleanSolutions: boolean) => grade + ' ' + dimension + ' ' + (cleanSolutions ? 0 : 1),
     [ID_POINTS, ID_T_SEARCH_DIMENSION, ID_VAL_FOR_SEARCH],
-    (grade, dimension, cleanSolutions) => constructTSearchBody(grade, dimension, cleanSolutions),
+    (grade, dimension, cleanSolutions) => constructFindTsBody(grade, dimension, cleanSolutions),
     getPolynomialSolver,
     (grade) => grade == 2 || grade == 3 || grade == 4 ? undefined : () => {
-        throw new Error('Can not search for t for a bezier with the grade ' + grade + ' only grade 2, 3 or 4 are allowed.');
+        throw new Error('Can not find for ts for a bezier with the grade ' + grade + ' only grade 2, 3 or 4 are allowed.');
     }
 )
