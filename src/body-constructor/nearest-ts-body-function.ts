@@ -22,7 +22,7 @@ export function constructNearestTsBody(grade: number, dimension: number) {
         retStr += 'const adjustedLastCoeff' + d + ' = coeff' + d + '_' + (grade - 1) + ' - ' + ID_DISTANCE_POINT + '[' + d + '];\n';
     }
 
-    retStr += '\ndebugger;';
+    retStr += '\n';
 
     const resultingGrade = coeffDef.length;
     for (let g = 0; g < resultingGrade; g++) {
