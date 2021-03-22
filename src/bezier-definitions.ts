@@ -21,9 +21,9 @@ export declare class StaticBezier<Grade extends number, Dimension extends number
 
     offsetPointRight(t: number, distance: number): NrTuple<Dimension>;
 
-    tSearch(dimension: NrRange<0, Dimension>, value: number, cleanSolutions?: boolean): Grade extends 2 | 3 | 4 ? number[] : never;
+    tSearch(dimension: NrRange<0, Dimension>, value: number, cleanSolutions?: boolean): number extends Grade ? number[] : Grade extends 2 | 3 | 4 ? number[] : never;
 
-    nearestT(point: NrTuple<Dimension>): Grade extends 2 | 3 ? number[] : never;
+    nearestTs(point: number extends Dimension ? number[] : NrTuple<Dimension>): number extends Grade ? number[] : Grade extends 2 | 3 ? number[] : never;
 }
 
 export interface StaticBezierConstructor<Grade extends number, Dimension extends number> {

@@ -1,7 +1,7 @@
 import {DynamicBezier, DynamicBezierConstructor, Points, StaticBezier} from "./bezier-definitions";
 import {atFunction, directionFunction} from "./body-constructor/bezier-function";
 import {tSearchFunction} from "./body-constructor/t-search-function";
-import {nearestTFunction} from "./body-constructor/nearest-t-body-function";
+import {nearestTsFunction} from "./body-constructor/nearest-ts-body-function";
 import {offsetPointLeftFunction, offsetPointRightFunction} from "./body-constructor/offset-bezier-function";
 
 
@@ -73,7 +73,7 @@ export function getDynamicBezier<Grade extends number, Dimension extends number>
         offsetPointLeft: offsetPointLeftFunction.getDynamicFunction(grade, dimension),
         offsetPointRight: offsetPointRightFunction.getDynamicFunction(grade, dimension),
         tSearch: tSearchFunction.getDynamicFunction(grade, dimension, cleanSolution),
-        nearestT: nearestTFunction.getDynamicFunction(grade, dimension)
+        nearestTs: nearestTsFunction.getDynamicFunction(grade, dimension)
     });
 
     classCache.set(key, DynamicBezier as any);

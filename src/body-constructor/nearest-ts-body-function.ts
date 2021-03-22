@@ -8,7 +8,7 @@ import {ID_DISTANCE_POINT, ID_POINTS} from "../ids";
 import {FunctionBodyHandler} from "./function-body-handler";
 import {getPolynomialSolver} from "./polynomial-solver";
 
-export function constructNearestTBody(grade: number, dimension: number) {
+export function constructNearestTsBody(grade: number, dimension: number) {
     let retStr = '';
 
     const coeffDef = deriveCoefficientsUsage(normalQuadraticCoefficientsUsage(grade));
@@ -19,14 +19,14 @@ export function constructNearestTBody(grade: number, dimension: number) {
     retStr += '\n';
 
     for (let d = 0; d < dimension; d++) {
-        retStr += 'const adjustedLastCoeff' + d + ' = ' + ID_DISTANCE_POINT + '[' + d + '] - coeff' + d + '_' + (grade - 1) + ';\n';
+        retStr += 'const adjustedLastCoeff' + d + ' = coeff' + d + '_' + (grade - 1) + ' - ' + ID_DISTANCE_POINT + '[' + d + '];\n';
     }
 
-    retStr += '\n';
+    retStr += '\ndebugger;';
 
     const resultingGrade = coeffDef.length;
     for (let g = 0; g < resultingGrade; g++) {
-        const coeffsToUse = coeffDef[g];
+        const coeffsToUse = coeffDef[resultingGrade - g - 1];
 
         const definition = 'const mergedCoeff' + g + ' = ';
         const definitionSpacer = ' '.repeat(definition.length - 3);
@@ -69,7 +69,7 @@ export function constructNearestTBody(grade: number, dimension: number) {
 
     retStr += '\n';
 
-    retStr += 'let solutions = solvePolynomial(\n';
+    retStr += 'return cleanSolutions(solvePolynomial(\n';
 
     for (let g = 0; g < resultingGrade; g++) {
         retStr += '  mergedCoeff' + g;
@@ -81,21 +81,19 @@ export function constructNearestTBody(grade: number, dimension: number) {
         }
     }
 
-    retStr += ');\n\n';
-
-    retStr += 'solutions = cleanSolutions(solutions);\n\n';
-
-    retStr += 'return solutions;';
+    retStr += '));\n\n';
 
     return retStr;
 }
 
-export const nearestTFunction = new FunctionBodyHandler(
-    "nearestT",
+const resultingGrade = (grade: number) => normalQuadraticCoefficientsUsage(grade).length;
+
+export const nearestTsFunction = new FunctionBodyHandler(
+    "nearestTs",
     (grade: number, dimension: number) => grade + ' ' + dimension,
     [ID_POINTS, ID_DISTANCE_POINT],
-    (grade, dimension) => constructNearestTBody(grade, dimension),
-    getPolynomialSolver,
+    (grade, dimension) => constructNearestTsBody(grade, dimension),
+    grade => getPolynomialSolver(resultingGrade(grade) - 1),
     (grade) => grade == 2 || grade == 3 ? undefined : () => {
         throw new Error('Can not calculate the nearest t for a grade other than 2 or 3 but ' + grade + ' was supplied.');
     }

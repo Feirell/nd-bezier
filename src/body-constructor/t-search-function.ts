@@ -1,4 +1,8 @@
-import {getUsedCoefficients, normalPolynomialCoefficientsUsage} from "../polynomial-coefficient-usage";
+import {
+    getUsedCoefficients,
+    normalPolynomialCoefficientsUsage,
+    normalQuadraticCoefficientsUsage
+} from "../polynomial-coefficient-usage";
 import {ID_POINTS, ID_T_SEARCH_DIMENSION, ID_VAL_FOR_SEARCH} from "../ids";
 import {constructBezierCoefficientForDimension} from "../section-constructor/bezier-coefficients";
 import {FunctionBodyHandler} from "./function-body-handler";
@@ -8,7 +12,7 @@ export function constructTSearchBody(grade: number, dimension: number, cleanSolu
     if (grade < 2 || grade > 4)
         throw new Error('can not construct t search for a grade other than 2, 3 or 4.');
 
-    const coeffDef = normalPolynomialCoefficientsUsage(grade);
+    const coeffDef = normalQuadraticCoefficientsUsage(grade);
     const usedCoefficients = getUsedCoefficients(grade, coeffDef);
 
     let retStr = '\n';
