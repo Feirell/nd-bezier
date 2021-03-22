@@ -5,16 +5,57 @@ import {NrRange} from "ts-number-range";
 import {tSearchFunction} from "./body-constructor/t-search-function";
 import {nearestTFunction} from "./body-constructor/nearest-t-body-function";
 
+function checkAndCopyPoints<Grade extends number, Dimension extends number>(points: Points<Grade, Dimension>) {
+    if (!Array.isArray(points))
+        throw new Error('points needs to an array');
+
+    const copiedPoints: Points<Grade, Dimension> = [] as any;
+
+    if (points.length < 2)
+        throw new Error('Points needs to at least be of length two.');
+
+    const grade = points.length;
+
+    let dimension: number;
+
+    for (let g = 0; g < grade; g++) {
+        const controlPoint = points[g];
+        if (!Array.isArray(controlPoint))
+            throw new Error('Points[' + g + '] is not an array.');
+
+        copiedPoints[g] = [] as any;
+        const copiedControlPoint = copiedPoints[g];
+
+        if (g == 0) {
+            dimension = controlPoint.length;
+
+            if (dimension == 0)
+                throw new Error('Dimension needs to be at least one.');
+        }
+
+        for (let d = 0; d < dimension!; d++) {
+            const coord = controlPoint[d];
+            if (!Number.isFinite(coord))
+                throw new Error('Points[' + g + '][' + d + '] is not finite.');
+
+            copiedControlPoint.push(coord);
+        }
+    }
+
+    return {points: copiedPoints, grade, dimension: dimension!};
+}
+
 export class StaticBezier<Grade extends number, Dimension extends number> implements SB<Grade, Dimension> {
     protected readonly dimension: Dimension;
     protected readonly grade: Grade;
     private readonly points: Points<Grade, Dimension>;
 
     constructor(p: Points<Grade, Dimension>) {
-        this.points = p;
+        const {points, grade, dimension} = checkAndCopyPoints<Grade, Dimension>(p);
 
-        this.grade = p.length as any;
-        this.dimension = p[0].length as any;
+        this.points = points;
+        this.grade = grade as Grade;
+        this.dimension = dimension as Dimension;
     }
 
     getPoints(): Points<Grade, Dimension> {

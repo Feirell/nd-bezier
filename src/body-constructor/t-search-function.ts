@@ -52,26 +52,13 @@ export function constructTSearchBody(grade: number, dimension: number, cleanSolu
     return retStr;
 }
 
-// const tSearch = new Cache<[number, number, number], string>(([grade, dimension, cs]) => grade + ' ' + dimension + ' ' + cs);
-
-// export function constructTSearchBodyCached(grade: number, dimension: number, cleanSolutions = true) {
-//     const cs = cleanSolutions ? 0 : 1;
-//     let res = tSearch.get([grade, dimension, cs]);
-//
-//     if (res == undefined) {
-//         res = constructTSearchBody(grade, dimension, cleanSolutions)
-//         tSearch.set([grade, dimension, cs], res);
-//     }
-//
-//     return res;
-// }
-//
-// export const constructTSearchBodyParameters = [ID_POINTS, ID_T_SEARCH_DIMENSION, ID_T_FOR_SEARCH];
-
 export const tSearchFunction = new FunctionBodyHandler(
     "tSearch",
     (grade: number, dimension: number, cleanSolutions: boolean) => grade + ' ' + dimension + ' ' + (cleanSolutions ? 0 : 1),
     [ID_POINTS, ID_T_SEARCH_DIMENSION, ID_VAL_FOR_SEARCH],
     (grade, dimension, cleanSolutions) => constructTSearchBody(grade, dimension, cleanSolutions),
-    getPolynomialSolver
+    getPolynomialSolver,
+    (grade) => grade == 2 || grade == 3 || grade == 4 ? undefined : () => {
+        throw new Error('Can not search for t for a bezier with the grade ' + grade + ' only grade 2, 3 or 4 are allowed.');
+    }
 )

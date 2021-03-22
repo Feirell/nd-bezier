@@ -90,25 +90,13 @@ export function constructNearestTBody(grade: number, dimension: number) {
     return retStr;
 }
 
-// const nearestTSearch = new Cache<[number, number], string>(([grade, dimension]) => grade + ' ' + dimension);
-//
-// export function constructNearestTBodyCached(grade: number, dimension: number) {
-//     let res = nearestTSearch.get([grade, dimension]);
-//
-//     if (res == undefined) {
-//         res = constructNearestTBody(grade, dimension)
-//         nearestTSearch.set([grade, dimension], res);
-//     }
-//
-//     return res;
-// }
-//
-// const constructNearestTBodyParameters = [ID_POINTS, ID_DISTANCE_POINT];
-
 export const nearestTFunction = new FunctionBodyHandler(
     "nearestT",
     (grade: number, dimension: number) => grade + ' ' + dimension,
     [ID_POINTS, ID_DISTANCE_POINT],
     (grade, dimension) => constructNearestTBody(grade, dimension),
-    getPolynomialSolver
+    getPolynomialSolver,
+    (grade) => grade == 2 || grade == 3 ? undefined : () => {
+        throw new Error('Can not calculate the nearest t for a grade other than 2 or 3 but ' + grade + ' was supplied.');
+    }
 )

@@ -3,44 +3,56 @@ const {runAndReport} = require('performance-test-runner/lib/suite-console-printe
 
 const bezier = require('bezier');
 
-const {StaticBezier} = require('../lib/src/static-bezier');
+// const {StaticBezier: OldStaticBezier} = require('../lib/src/static-bezier');
 
-const {getDynamicBezier} = require('../lib/new-src/dynamic-bezier');
+// const {getDynamicBezier} = require('../lib/src/dynamic-bezier');
 
-const {StaticBezier: NewStaticBezier} = require("../lib/new-src/static-bezier");
+const {StaticBezier} = require("../lib/static-bezier");
 
 const points = [
     [1, 5],
     [2, 6],
-    [3, 7],
-    [4, 8]
+    [3, 7]
 ];
 
+/*
 const gdb = getDynamicBezier;
 
 const NewDynamicBezier = gdb(4, 2);
+*/
 
 const variations = [
+    // ['old StaticBezier', new StaticBezier(points)],
+    // ['DynamicBezier', new NewDynamicBezier(points)],
     ['StaticBezier', new StaticBezier(points)],
-    ['new DynamicBezier', new NewDynamicBezier(points)],
-    ['new StaticBezier', new NewStaticBezier(points)],
 ];
 
 
 measure('create', () => {
     measure('bezier', () => {
         speed('just prepare', {bezier}, () => {
-            bezier.prepare(4);
+            bezier.prepare(3);
         });
 
         const xs = points.map(v => v[0]);
         const ys = points.map(v => v[1]);
         speed('with at call', {bezier, xs, ys}, () => {
-            const prep = bezier.prepare(4);
+            const prep = bezier.prepare(3);
             prep(xs, .3);
             prep(ys, .3);
         });
     });
+
+    // measure('old StaticBezier', () => {
+    //     speed('just prepare', {OldStaticBezier, points}, () => {
+    //         new OldStaticBezier(points);
+    //     });
+    //
+    //     speed('with at call', {OldStaticBezier, points}, () => {
+    //         const inst = new OldStaticBezier(points);
+    //         inst.at(.3);
+    //     });
+    // });
 
     measure('StaticBezier', () => {
         speed('just prepare', {StaticBezier, points}, () => {
@@ -53,31 +65,20 @@ measure('create', () => {
         });
     });
 
-    measure('new StaticBezier', () => {
-        speed('just prepare', {NewStaticBezier, points}, () => {
-            new NewStaticBezier(points);
-        });
-
-        speed('with at call', {NewStaticBezier, points}, () => {
-            const inst = new NewStaticBezier(points);
-            inst.at(.3);
-        });
-    });
-
-    measure('new DynamicBezier', () => {
-        speed('one time generation', {gdb}, () => {
-            gdb(4, 2);
-        });
-
-        speed('just prepare', {NewDynamicBezier, points}, () => {
-            new NewDynamicBezier(points);
-        });
-
-        speed('with at call', {NewDynamicBezier, points}, () => {
-            const inst = new NewDynamicBezier(points);
-            inst.at(.3);
-        });
-    });
+    // measure('DynamicBezier', () => {
+    //     speed('one time generation', {gdb}, () => {
+    //         gdb(4, 2);
+    //     });
+    //
+    //     speed('just prepare', {NewDynamicBezier, points}, () => {
+    //         new NewDynamicBezier(points);
+    //     });
+    //
+    //     speed('with at call', {NewDynamicBezier, points}, () => {
+    //         const inst = new NewDynamicBezier(points);
+    //         inst.at(.3);
+    //     });
+    // });
 });
 
 measure('at', () => {
@@ -166,7 +167,7 @@ measure('direction', () => {
                 instance.direction(.3);
             });
 
-        })
+        });
     }
 });
 
@@ -185,7 +186,33 @@ measure('offset point', () => {
             speed('same value', {instance}, () => {
                 instance.offsetPointLeft(.3, 100);
             });
-        })
+        });
+    }
+});
+
+measure('nearestT', () => {
+    const testPoints = [
+        [0, 0],
+        [5, 5],
+        [0, 5],
+        [5, 0]
+    ]
+
+    for (const [name, instance] of variations) {
+        measure(name, () => {
+            let c = {i: 0};
+
+            speed('different values', {c, instance, testPoints}, () => {
+                if (++c.i == 4)
+                    c.i = 0;
+
+                instance.nearestT(testPoints[c.i]);
+            });
+
+            speed('same value', {instance}, () => {
+                instance.nearestT([5, 5]);
+            });
+        });
     }
 });
 

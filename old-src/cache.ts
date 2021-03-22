@@ -1,7 +1,3 @@
-import {ID_POINTS, IDS} from "../new-src/ids";
-import {Points, StaticBezier} from "../new-src/bezier-definitions";
-import {getPlaces, PointsPlaces} from "./find-points-places";
-
 const functionId = (() => {
     const wm = new WeakMap<() => void, number>();
     let counter = 0;

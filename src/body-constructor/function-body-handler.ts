@@ -1,7 +1,6 @@
 import {Points, StaticBezier} from "../bezier-definitions";
-import {getPlaces, PointsPlaces} from "../../old-src/find-points-places";
+import {getPlaces, makeSpecific, PointsPlaces} from "./find-points-places";
 import {ID_POINTS, IDS} from "../ids";
-import {makeSpecific} from "./find-points-places";
 
 type Names = Exclude<keyof StaticBezier<number, number>, 'getPoints'>;
 type FncDif<Grade extends number, Dimension extends number, Name extends Names> = StaticBezier<Grade, Dimension>[Name];
@@ -20,6 +19,7 @@ export class FunctionBodyHandler<Name extends Names,
         private readonly args: IDS[],
         private readonly createBody: (grade: number, dimension: number, ...args: Args) => string,
         private readonly additionalGlobals: (grade: number, dimension: number, ...args: Args) => { internalName: string, globalValue: any }[] = () => [],
+        private readonly insteadFunction: (grade: number, dimension: number, ...args: Args) => undefined | (() => any) = () => undefined
     ) {
     }
 
@@ -38,6 +38,10 @@ export class FunctionBodyHandler<Name extends Names,
     }
 
     getDynamicFunction<Grade extends number, Dimension extends number>(grade: Grade, dimension: Dimension, ...args: Args): FncDif<Grade, Dimension, Name> {
+        const instead = this.insteadFunction(grade, dimension, ...args);
+        if (instead !== undefined)
+            return instead;
+
         const key = this.keyGen(grade, dimension, ...args);
         const res = this.dynamicFunctionCache.get(key);
 
@@ -63,6 +67,10 @@ export class FunctionBodyHandler<Name extends Names,
     }
 
     getStaticFunction<Grade extends number, Dimension extends number>(grade: Grade, dimension: Dimension, points: Points<Grade, Dimension>, ...args: Args): FncDif<Grade, Dimension, Name> {
+        const instead = this.insteadFunction(grade, dimension, ...args);
+        if (instead !== undefined)
+            return instead;
+
         const key = this.keyGen(grade, dimension, ...args);
         let splitBody = this.staticFunctionCache.get(key);
 
@@ -82,7 +90,7 @@ export class FunctionBodyHandler<Name extends Names,
             '\n}'
         )(...additionalGlobals.map(e => e.globalValue)) as FncDif<Grade, Dimension, Name>;
 
-        this.staticFunctionCache.set(key, fnc as any);
+        this.staticFunctionCache.set(key, splitBody);
 
         return fnc;
     }

@@ -111,7 +111,7 @@ describe('tSearch', () => {
         describe('holding points ' + JSON.stringify(holdingPoint), () => {
             for (const {xValue, dimension, tValue} of tSearchSolutions)
                 it('bezier.tSearch(' + xValue + ', ' + dimension + ') ≈ ' + tValue, () => {
-                    const res = bezier.tSearch(xValue, dimension);
+                    const res = bezier.tSearch(dimension, xValue);
                     oneInRange(res, tValue, 1e-4);
                 });
         });
