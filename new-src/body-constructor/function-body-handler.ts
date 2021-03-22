@@ -1,25 +1,10 @@
 import {Points, StaticBezier} from "../bezier-definitions";
-import {getPlaces, PointsPlaces} from "../../src/find-points-places";
+import {getPlaces, PointsPlaces} from "../../old-src/find-points-places";
 import {ID_POINTS, IDS} from "../ids";
+import {makeSpecific} from "./find-points-places";
 
 type Names = Exclude<keyof StaticBezier<number, number>, 'getPoints'>;
 type FncDif<Grade extends number, Dimension extends number, Name extends Names> = StaticBezier<Grade, Dimension>[Name];
-
-function makeSpecific(places: PointsPlaces, points: number[][]) {
-    let newFuncBody = "";
-    for (let i = 0; i < places.length; i++) {
-        // every even element is a string which separates two occurrences of point[p][d]
-        if (i % 2 == 0) {
-            newFuncBody += places[i] as string;
-        } else { // every odd one is an object which has to be replaced by the numeric value in points[p][d] (the function argument)
-            const para = places[i] as { point: number, dimension: number };
-            newFuncBody += '' + points[para.point][para.dimension];
-        }
-    }
-
-    return newFuncBody;
-}
-
 
 export class FunctionBodyHandler<Name extends Names,
     Args extends unknown[]> {

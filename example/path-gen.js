@@ -4,12 +4,12 @@ import {
 
 import {
     Bezier
-} from "../src/bezier.js";
+} from "../old-src/bezier.js";
 
 import {
     level,
     sum
-} from '../src/math-functions.js';
+} from '../old-src/math-functions.js';
 
 (function () {
     const svgContainer = document.getElementById('svg-container');

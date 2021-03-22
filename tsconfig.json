@@ -8,6 +8,6 @@
         "outDir": "lib"
     },
     "files": [
-      "./src/static-bezier.ts"
+      "./old-src/static-bezier.ts"
     ]
 }

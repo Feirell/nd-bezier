@@ -1,4 +1,4 @@
-import {bc} from "../src/math-functions";
+import {bc} from "./math-functions";
 
 class Polynomial {
     constructor(private readonly coefficients: ReadonlyArray<number> = []) {
