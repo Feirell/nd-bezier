@@ -62,8 +62,8 @@ const b = new StaticBezier(points);
 b.at(0.3) // returns [0.468, 0.216]
 
 // 0 == first dimension, 1 == second dimension
-b.findTs(0.468, 0) // returns [ 0.3 ]
-b.findTs(0.216, 1) // returns [ 1.448528137423857, -0.24852813742385704, 0.3 ]
+b.findTs(0, 0.468) // returns [ 0.3 ]
+b.findTs(1, 0.216) // returns [ 1.448528137423857, -0.24852813742385704, 0.3 ]
 ```
 
 ## performance test
@@ -78,7 +78,7 @@ npm run performance
 
 Feel free to add other libraries and create a pull request.
 
-The result of the latest version (Grade 4, Dimension 2):
+The result of the latest version (Grade 3, Dimension 2):
 
 ```text
                          ops/sec  MoE samples relative
