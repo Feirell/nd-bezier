@@ -50,6 +50,11 @@ This method returns the nearest t for the given point. Those t are not limited t
 If you only need the nearest one you can just plug those t into the at function and find the one with the lowest distance to the points given, this one will be guaranteed to be the closest one. But this function does not do this for you so you
 can follow your Bézier curve more smoothly and you can pick the correct t depending on previous lookups, otherwise the t might jump unexpected when another part of the bezier is closer.
 
+#### `split(t: number): [Points<Grade, Dimension>, Points<Grade, Dimension>]`
+
+Splits this Bézier curve into two Bézier curves of the same dimensions with the same merged form. The first value in the return array are the control points
+for the Bézier curve which goes from 0 to t and the second set describes a Bézier curve from t to 1.
+
 ## examples
 
 ```javascript

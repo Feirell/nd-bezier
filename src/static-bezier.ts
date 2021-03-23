@@ -5,6 +5,7 @@ import {offsetPointLeftFunction, offsetPointRightFunction} from "./body-construc
 import {findTsFunction} from "./body-constructor/find-ts-function";
 import {nearestTsFunction} from "./body-constructor/nearest-ts-body-function";
 import {NrRange} from "./number-ranger";
+import {split} from "./split-bezier";
 
 function checkAndCopyPoints<Grade extends number, Dimension extends number>(points: Points<Grade, Dimension>) {
     if (!Array.isArray(points))
@@ -91,5 +92,9 @@ export class StaticBezier<Grade extends number, Dimension extends number> implem
     nearestTs(point: number extends Dimension ? number[] : NrTuple<Dimension>): number extends Grade ? number[] : Grade extends 2 | 3 ? number[] : never {
         this.nearestTs = nearestTsFunction.getStaticFunction(this.grade, this.dimension, this.points);
         return this.nearestTs(point);
+    }
+
+    split(t: number): [Points<Grade, Dimension>, Points<Grade, Dimension>] {
+        return split(this.points, t);
     }
 }

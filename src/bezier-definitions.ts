@@ -24,6 +24,8 @@ export declare class StaticBezier<Grade extends number, Dimension extends number
     findTs(dimension: NrRange<0, Dimension>, value: number, cleanSolutions?: boolean): number extends Grade ? number[] : Grade extends 2 | 3 | 4 ? number[] : never;
 
     nearestTs(point: number extends Dimension ? number[] : NrTuple<Dimension>): number extends Grade ? number[] : Grade extends 2 | 3 ? number[] : never;
+
+    split(t: number): [Points<Grade, Dimension>, Points<Grade, Dimension>];
 }
 
 export interface StaticBezierConstructor<Grade extends number, Dimension extends number> {
