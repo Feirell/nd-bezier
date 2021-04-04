@@ -139,13 +139,13 @@ Since those alternatives are only approximations of the actual length you should
 
 #### `arcLengthSubSections(tStart: number, tEnd: number, subSections: number = 10): number`
 
-> `import {arcLengthSubSections} from 'nd-bezier/lib/arc-length-sub-sections'
+`import {arcLengthSubSections} from 'nd-bezier/lib/arc-length-sub-sections`
 
 As the name implies this function just iterates over `t` values defined by the `subSections` argument and sums the distances between those points which results in an approximation of the actual length.
 
 #### `arcLengthIntegration(tStart: number, tEnd: number, e: number = 18): number`
 
-> `import {arcLengthSubSections} from 'nd-bezier/lib/arc-length-sub-sections'
+`import {arcLengthSubSections} from 'nd-bezier/lib/arc-length-sub-sections`
 
 > To use this function you need to have the npm package [sm-integral](https://www.npmjs.com/package/sm-integral) installed
 
