@@ -1,11 +1,11 @@
-import {NrTuple, Points, StaticBezier as SB} from "./bezier-definitions";
+import {NrRange, NrTuple, Points, StaticBezier as SB} from "./bezier-definitions";
 import {atFunction, directionFunction} from "./body-constructor/bezier-function";
 import {offsetPointLeftFunction, offsetPointRightFunction} from "./body-constructor/offset-bezier-function";
 
 import {findTsFunction} from "./body-constructor/find-ts-function";
 import {nearestTsFunction} from "./body-constructor/nearest-ts-body-function";
-import {NrRange} from "./number-ranger";
 import {split} from "./split-bezier";
+import {arcLengthFunction} from "./body-constructor/arc-length";
 
 function checkAndCopyPoints<Grade extends number, Dimension extends number>(points: Points<Grade, Dimension>) {
     if (!Array.isArray(points))
@@ -50,7 +50,7 @@ function checkAndCopyPoints<Grade extends number, Dimension extends number>(poin
 export class StaticBezier<Grade extends number, Dimension extends number> implements SB<Grade, Dimension> {
     protected readonly dimension: Dimension;
     protected readonly grade: Grade;
-    private readonly points: Points<Grade, Dimension>;
+    protected readonly points: Points<Grade, Dimension>;
 
     constructor(p: Points<Grade, Dimension>) {
         const {points, grade, dimension} = checkAndCopyPoints<Grade, Dimension>(p);
@@ -84,9 +84,9 @@ export class StaticBezier<Grade extends number, Dimension extends number> implem
         return this.offsetPointRight(t, distance);
     }
 
-    findTs(dim: NrRange<0, Dimension>, value: number, cleanSolutions?: boolean): number extends Grade ? number[] : Grade extends 2 | 3 | 4 ? number[] : never {
+    findTs(dim: NrRange<Dimension>, value: number): number extends Grade ? number[] : Grade extends 2 | 3 | 4 ? number[] : never {
         this.findTs = findTsFunction.getStaticFunction(this.grade, this.dimension, this.points, true);
-        return this.findTs(dim, value, cleanSolutions);
+        return this.findTs(dim, value);
     }
 
     nearestTs(point: number extends Dimension ? number[] : NrTuple<Dimension>): number extends Grade ? number[] : Grade extends 2 | 3 ? number[] : never {
@@ -96,5 +96,10 @@ export class StaticBezier<Grade extends number, Dimension extends number> implem
 
     split(t: number): [Points<Grade, Dimension>, Points<Grade, Dimension>] {
         return split(this.points, t);
+    }
+
+    arcLength(tStart: number, tEnd: number): Grade extends 2 | 3 ? number : never {
+        this.arcLength = arcLengthFunction.getStaticFunction(this.grade, this.dimension, this.points);
+        return this.arcLength(tStart, tEnd);
     }
 }

@@ -112,6 +112,19 @@ export function deriveCoefficientsUsage(definition: CoefficientUsageDefinition) 
     return copy;
 }
 
+export function addCoefficientUsages(a: CoefficientUsageDefinition, b: CoefficientUsageDefinition) {
+    const longer = a.length > b.length ? a : b;
+    const shorter = a.length > b.length ? b : a;
+
+    const res: CoefficientUsageDefinition = JSON.parse(JSON.stringify(longer));
+
+    for (let exp = 0; exp < shorter.length; exp++)
+        res[exp].push(...shorter[exp]);
+
+
+    return res;
+}
+
 export function getUsedCoefficients(grade: number, ...coeffDefs: CoefficientUsageDefinition[]) {
     // remember all used coefficients to drop those which are not relevant
     const usedCoefficients = new Array(grade).fill(false) as boolean[];

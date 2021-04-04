@@ -3,8 +3,7 @@ import {atFunction, directionFunction} from "./body-constructor/bezier-function"
 import {findTsFunction} from "./body-constructor/find-ts-function";
 import {nearestTsFunction} from "./body-constructor/nearest-ts-body-function";
 import {offsetPointLeftFunction, offsetPointRightFunction} from "./body-constructor/offset-bezier-function";
-import {split} from "./split-bezier";
-
+import {split as splitFnc} from "./split-bezier";
 
 function getPoints<Grade extends number, Dimension extends number>(this: StaticBezier<Grade, Dimension>): Points<Grade, Dimension> {
     return (this as any).points;
@@ -48,6 +47,10 @@ const classCache = new Map<string, DynamicBezierConstructor<number, number>>();
 type DynamicBezierConstructorDef<Grade extends number, Dimension extends number> = DynamicBezierConstructor<Grade, Dimension>;
 type DynamicBezierDef<Grade extends number, Dimension extends number> = DynamicBezier<Grade, Dimension>;
 
+function split<Grade extends number, Dimension extends number>(this: DynamicBezier<Grade, Dimension>, t: number) {
+    return splitFnc((this as any).points as Points<Grade, Dimension>, t);
+}
+
 // TODO rewrite dynamic bezier to not use t grouped coefficients but the old version which had t multipliers and coords just once
 export function getDynamicBezier<Grade extends number, Dimension extends number>(grade: Grade, dimension: Dimension, cleanSolution = true) {
     const key = grade + ' ' + dimension + ' ' + (cleanSolution ? 0 : 1);
@@ -76,10 +79,7 @@ export function getDynamicBezier<Grade extends number, Dimension extends number>
         findTs: findTsFunction.getDynamicFunction(grade, dimension, cleanSolution),
         nearestTs: nearestTsFunction.getDynamicFunction(grade, dimension),
 
-
-        split(t: number): [Points<Grade, Dimension>, Points<Grade, Dimension>] {
-            return split((this as any).points, t);
-        }
+        split: split
     });
 
     classCache.set(key, DynamicBezier as any);

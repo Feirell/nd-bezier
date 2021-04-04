@@ -5,7 +5,7 @@
   "types": "./lib/static-bezier.d.ts",
   "scripts": {
     "build": "tsc",
-    "performance": "node ./tests/test-performance.js",
+    "performance": "node tests/test-performance.ts",
     "test": "mocha ./tests/test.js"
   },
   "repository": "https://github.com/Feirell/nd-bezier.git",
