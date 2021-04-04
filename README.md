@@ -85,7 +85,9 @@ Since this package is meant to provide a faster option in comparision to other B
 You can invoke this script by calling: 
 
 ```bash
-npm run performance
+npm run build-performance
+node tests/lib/tests/test-performance.js
+node tests/lib/tests/test-arc-length-performance.js
 ```
 
 Feel free to add other libraries and create a pull request.
