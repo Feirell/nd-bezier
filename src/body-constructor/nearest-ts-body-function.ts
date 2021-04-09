@@ -69,7 +69,7 @@ export function constructNearestTsBody(grade: number, dimension: number) {
 
     retStr += '\n';
 
-    retStr += 'return cleanSolutions(solvePolynomial(\n';
+    retStr += 'const solutions = cleanSolutions(solvePolynomial(\n';
 
     for (let g = 0; g < resultingGrade; g++) {
         retStr += '  mergedCoeff' + g;
@@ -82,6 +82,31 @@ export function constructNearestTsBody(grade: number, dimension: number) {
     }
 
     retStr += '));\n\n';
+
+    retStr += 'const onlyMinima = [];\n\n';
+
+    retStr += 'for (let i = 0; i < solutions.length; i++) {\n';
+    retStr += '  const t = solutions[i];\n';
+    retStr += '  let res = mergedCoeff' + (resultingGrade - 2) + ';\n\n';
+
+
+    for (let g = resultingGrade - 3; g >= 0; g--) {
+        // second derivative to check if it is a minima
+        if (resultingGrade - 3 == g)
+            retStr += '  let multipleT = t;\n';
+        else
+            retStr += '  multipleT *= t;\n';
+
+        const derivativeMult = resultingGrade - g - 1;
+        retStr += '  res += multipleT * mergedCoeff' + g + ' * ' + derivativeMult + ';\n\n';
+    }
+
+    retStr += '  if(res > 0)\n';
+    retStr += '    onlyMinima.push(t);\n';
+
+    retStr += '}\n\n';
+
+        retStr += 'return onlyMinima;\n';
 
     return retStr;
 }
