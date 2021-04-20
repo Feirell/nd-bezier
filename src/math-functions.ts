@@ -12,36 +12,22 @@ export const factorial = (function () {
     return factorial;
 })();
 
-export const bc = (function () {
-    const bcCache: number[][] = [];
+export const bc = (n: number, k: number) => {
+    if (k < 0 || k > n)
+        return 0;
 
-    /**
-     * Calculates the binomial coefficient for n over k
-     * @param n
-     * @param k
-     */
-    function bc(n: number, k: number): number {
+    if (k == 0 || k == n)
+        return 1;
 
-        if (k > n / 2)
-            k = n - k;
+    if (n - k < k)
+        k = n - k;
 
-        if (k == 0)
-            return 1;
+    let c = 1;
 
-        if (k == 1)
-            return n;
+    for (let i = 0; i < k; i++)
+        c *= (n - i) / (i + 1);
 
-        return bcCache[n][k];
-    }
+    return c;
+}
 
-    // building up cache
-    for (let n = 0; n <= 15; n++) {
-        bcCache[n] = [];
-        for (let k = 0; k <= Math.ceil(n / 2); k++) {
-            bcCache[n][k] = factorial(n) / (factorial(k) * factorial(n - k));
-        }
-    }
-
-    return bc;
-})();
 
