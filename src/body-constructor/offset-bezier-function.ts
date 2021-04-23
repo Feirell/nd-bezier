@@ -59,16 +59,9 @@ export function constructOffsetBezier(grade: number, dimension: number, directio
 //
 // const constructOffsetBezierParameters = [ID_POINTS, ID_T, ID_DISTANCE];
 
-export const offsetPointLeftFunction = new FunctionBodyHandler(
-    "offsetPointLeft",
+export const offsetPointFunction = new FunctionBodyHandler(
+    "offsetPoint",
     (grade, dimension) => grade + ' ' + dimension,
     [ID_POINTS, ID_T, ID_DISTANCE],
     (grade, dimension) => constructOffsetBezier(grade, dimension, 'left')
 );
-
-export const offsetPointRightFunction = new FunctionBodyHandler(
-    "offsetPointRight",
-    (grade, dimension) => grade + ' ' + dimension,
-    [ID_POINTS, ID_T, ID_DISTANCE],
-    (grade, dimension) => constructOffsetBezier(grade, dimension, 'right')
-)

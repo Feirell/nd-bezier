@@ -25,16 +25,12 @@ The at function is used to get the point on the Bézier curve depending on the g
 
 With this function you can get the direction of the Beziér curve at the specified `t` the Result is the direction vector.
 
-#### `offsetPointLeft(t: number, distance: number): NrTuple<Dimension>`
+#### `offsetPoint(t: number, distance: number): NrTuple<Dimension>`
 
-This function is a utility function which adds the `direction` vector in a 90° to the left of the `at` vector at the specified `t`.
+This function is a utility function which adds the `direction` vector in a 90° to the left, if distance is positive or to the right if the distance is negative, of the `at` vector at the specified `t`.
 The direction vector will be set to the specified length. The resulting new curve can be interpreted as an offset Beziér curve, but
 be aware that this approach will fail when the curve defined by the points has a to narrow curvature. See [this example](https://feirell.github.io/offset-bezier/)
 move the orange points of a and b together and see how the black lines parallel to the central curve collapse. Enable the "Spikes for offset bezier" in the lower right to see why this happens.
-
-#### `offsetPointRight(t: number, distance: number): NrTuple<Dimension>`
-
-Works the same way `offsetPointsLeft` works but adds the `direction` to the right.
 
 #### `findTs(dimension: NrRange<0, Dimension>, value: number): Grade extends 2 | 3 | 4 ? number[] : never`
 

@@ -1,6 +1,6 @@
 import {NrRange, NrTuple, Points, StaticBezier as SB} from "./bezier-definitions";
 import {atFunction, directionFunction} from "./body-constructor/bezier-function";
-import {offsetPointLeftFunction, offsetPointRightFunction} from "./body-constructor/offset-bezier-function";
+import {offsetPointFunction} from "./body-constructor/offset-bezier-function";
 
 import {findTsFunction} from "./body-constructor/find-ts-function";
 import {nearestTsFunction} from "./body-constructor/nearest-ts-body-function";
@@ -74,14 +74,9 @@ export class StaticBezier<Grade extends number, Dimension extends number> implem
         return this.direction(t);
     }
 
-    offsetPointLeft(t: number, distance: number): NrTuple<Dimension> {
-        this.offsetPointLeft = offsetPointLeftFunction.getStaticFunction(this.grade, this.dimension, this.points);
-        return this.offsetPointLeft(t, distance);
-    }
-
-    offsetPointRight(t: number, distance: number): NrTuple<Dimension> {
-        this.offsetPointRight = offsetPointRightFunction.getStaticFunction(this.grade, this.dimension, this.points);
-        return this.offsetPointRight(t, distance);
+    offsetPoint(t: number, distance: number): NrTuple<Dimension> {
+        this.offsetPoint = offsetPointFunction.getStaticFunction(this.grade, this.dimension, this.points);
+        return this.offsetPoint(t, distance);
     }
 
     findTs(dim: NrRange<Dimension>, value: number): number extends Grade ? number[] : Grade extends 2 | 3 | 4 ? number[] : never {

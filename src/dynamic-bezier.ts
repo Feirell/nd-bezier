@@ -2,7 +2,7 @@ import {DynamicBezier, DynamicBezierConstructor, Points, StaticBezier} from "./b
 import {atFunction, directionFunction} from "./body-constructor/bezier-function";
 import {findTsFunction} from "./body-constructor/find-ts-function";
 import {nearestTsFunction} from "./body-constructor/nearest-ts-body-function";
-import {offsetPointLeftFunction, offsetPointRightFunction} from "./body-constructor/offset-bezier-function";
+import {offsetPointFunction} from "./body-constructor/offset-bezier-function";
 import {split as splitFnc} from "./split-bezier";
 
 function getPoints<Grade extends number, Dimension extends number>(this: StaticBezier<Grade, Dimension>): Points<Grade, Dimension> {
@@ -74,8 +74,7 @@ export function getDynamicBezier<Grade extends number, Dimension extends number>
         at: atFunction.getDynamicFunction(grade, dimension),
 
         direction: directionFunction.getDynamicFunction(grade, dimension),
-        offsetPointLeft: offsetPointLeftFunction.getDynamicFunction(grade, dimension),
-        offsetPointRight: offsetPointRightFunction.getDynamicFunction(grade, dimension),
+        offsetPoint: offsetPointFunction.getDynamicFunction(grade, dimension),
         findTs: findTsFunction.getDynamicFunction(grade, dimension, cleanSolution),
         nearestTs: nearestTsFunction.getDynamicFunction(grade, dimension),
 
