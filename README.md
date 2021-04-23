@@ -5,9 +5,9 @@
 
 This package aims to help with the usage of n-dimensional Bézier curves. Those curves are mostly used to model paths or to interpolate between values.
 
-Alot of work has gone into making this package as fast as possible, have a look at the performance section.
+A lot of work has gone into making this package as fast as possible, have a look at the performance section.
 
-This package also provides other ulitity functions such as the `findTs` which is the reverse for the `at` function as well as the `nearestTs` to find the nearest ts for a given point. 
+This package also provides other utility functions such as the `findTs` which is the reverse for the `at` function as well as the `nearestTs` to find the nearest ts for a given point. 
 
 ## API
 
