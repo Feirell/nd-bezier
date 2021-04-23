@@ -4,6 +4,7 @@ import {findTsFunction} from "./body-constructor/find-ts-function";
 import {nearestTsFunction} from "./body-constructor/nearest-ts-body-function";
 import {offsetPointFunction} from "./body-constructor/offset-bezier-function";
 import {split as splitFnc} from "./split-bezier";
+import {offsetDirectionFunction} from "./body-constructor/offset-direction";
 
 function getPoints<Grade extends number, Dimension extends number>(this: StaticBezier<Grade, Dimension>): Points<Grade, Dimension> {
     return (this as any).points;
@@ -75,6 +76,7 @@ export function getDynamicBezier<Grade extends number, Dimension extends number>
 
         direction: directionFunction.getDynamicFunction(grade, dimension),
         offsetPoint: offsetPointFunction.getDynamicFunction(grade, dimension),
+        offsetDirection: offsetDirectionFunction.getDynamicFunction(grade, dimension),
         findTs: findTsFunction.getDynamicFunction(grade, dimension, cleanSolution),
         nearestTs: nearestTsFunction.getDynamicFunction(grade, dimension),
 

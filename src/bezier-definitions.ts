@@ -45,7 +45,9 @@ export declare class StaticBezier<Grade extends number, Dimension extends number
 
     direction(t: number): NrTuple<Dimension>;
 
-    offsetPoint(t: number, distance: number): NrTuple<Dimension>;
+    offsetPoint(t: number, distance: number): Dimension extends 2 ? NrTuple<Dimension> : never;
+
+    offsetDirection(t: number, distance: number): Dimension extends 2 ? Grade extends 2 | 3 | 4 ? NrTuple<Dimension> : never : never;
 
     findTs(dimension: NrRange<Dimension>, value: number): number extends Grade ? number[] : Grade extends 2 | 3 | 4 ? number[] : never;
 

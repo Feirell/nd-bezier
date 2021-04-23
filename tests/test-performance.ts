@@ -142,7 +142,20 @@ measure('offset point', () => {
             if (++c.i == 2)
                 c.i = 0;
 
-            instance.offsetPointLeft(c.i / 10, 100);
+            instance.offsetPoint(c.i / 10, 100);
+        });
+    }
+});
+
+measure('offset direction', () => {
+    let c = {i: 0};
+
+    for (const [name, instance] of variations) {
+        speed(name, {c, instance}, () => {
+            if (++c.i == 2)
+                c.i = 0;
+
+            instance.offsetDirection(c.i / 10, 100);
         });
     }
 });

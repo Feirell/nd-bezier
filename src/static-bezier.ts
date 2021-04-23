@@ -6,6 +6,7 @@ import {findTsFunction} from "./body-constructor/find-ts-function";
 import {nearestTsFunction} from "./body-constructor/nearest-ts-body-function";
 import {split} from "./split-bezier";
 import {arcLengthFunction} from "./body-constructor/arc-length";
+import {offsetDirectionFunction} from "./body-constructor/offset-direction";
 
 function checkAndCopyPoints<Grade extends number, Dimension extends number>(points: Points<Grade, Dimension>) {
     if (!Array.isArray(points))
@@ -74,9 +75,14 @@ export class StaticBezier<Grade extends number, Dimension extends number> implem
         return this.direction(t);
     }
 
-    offsetPoint(t: number, distance: number): NrTuple<Dimension> {
+    offsetPoint(t: number, distance: number): Dimension extends 2 ? NrTuple<Dimension> : never {
         this.offsetPoint = offsetPointFunction.getStaticFunction(this.grade, this.dimension, this.points);
         return this.offsetPoint(t, distance);
+    }
+
+    offsetDirection(t: number, distance: number): Dimension extends 2 ? Grade extends 2 | 3 | 4 ? NrTuple<Dimension> : never : never {
+        this.offsetDirection = offsetDirectionFunction.getStaticFunction(this.grade, this.dimension, this.points);
+        return this.offsetDirection(t, distance);
     }
 
     findTs(dim: NrRange<Dimension>, value: number): number extends Grade ? number[] : Grade extends 2 | 3 | 4 ? number[] : never {

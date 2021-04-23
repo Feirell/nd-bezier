@@ -25,12 +25,21 @@ The at function is used to get the point on the Bézier curve depending on the g
 
 With this function you can get the direction of the Beziér curve at the specified `t` the Result is the direction vector.
 
-#### `offsetPoint(t: number, distance: number): NrTuple<Dimension>`
+#### `offsetPoint(t: number, distance: number): Dimension extends 2 ? NrTuple<Dimension> : never`
+
+> Only available for Bézier with the dimensions (amount of components) 2 
 
 This function is a utility function which adds the `direction` vector in a 90° to the left, if distance is positive or to the right if the distance is negative, of the `at` vector at the specified `t`.
 The direction vector will be set to the specified length. The resulting new curve can be interpreted as an offset Beziér curve, but
 be aware that this approach will fail when the curve defined by the points has a to narrow curvature. See [this example](https://feirell.github.io/offset-bezier/)
 move the orange points of a and b together and see how the black lines parallel to the central curve collapse. Enable the "Spikes for offset bezier" in the lower right to see why this happens.
+
+#### `offsetDirection(t: number, distance: number): Dimension extends 2 ? Grade extends 2 | 3 | 4 ? NrTuple<Dimension> : never : never`
+
+> Only available for Bézier with the grade (amount of control points) 2, 3 and 4
+> Only available for Bézier with the dimensions (amount of components) 2
+
+With this function you can get the direction of the offset Beziér (defined by the offsetPoints function). This vector will be a scaled variation of the direction vector given by the `direction` method.
 
 #### `findTs(dimension: NrRange<0, Dimension>, value: number): Grade extends 2 | 3 | 4 ? number[] : never`
 
@@ -94,24 +103,26 @@ The result of the latest version (Grade 3, Dimension 2):
                      ops/sec  MoE samples relative
 create
   bezier
-    just prepare 103,261,406 0.55      96     1.69
-    with at call  61,225,847 0.57      96     1.00
+    just prepare  92,759,286 1.12      90     1.68
+    with at call  55,365,772 0.86      90     1.00
   StaticBezier
-    just prepare   3,326,926 0.79      82    17.67
-    with at call     188,263 1.31      92     1.00
+    just prepare   3,162,554 0.53      89    17.64
+    with at call     179,252 0.81      87     1.00
 at
-  bezier         120,903,064 0.58      92     1.00
-  StaticBezier   365,442,491 0.23      97     3.02
+  bezier         115,819,150 0.72      92     1.00
+  StaticBezier   342,976,610 0.72      91     2.96
 findTs
-  StaticBezier    10,182,662 0.48      96     1.00
+  StaticBezier     9,536,879 0.80      88     1.00
 direction
-  StaticBezier   442,733,661 0.37      97     1.00
+  StaticBezier   417,530,451 0.73      92     1.00
 offset point
-  StaticBezier   424,521,754 0.38      93     1.00
+  StaticBezier   401,623,435 0.65      87     1.00
+offset direction
+  StaticBezier    72,949,505 1.16      87     1.00
 nearestTs
-  StaticBezier     2,791,775 0.37      94     1.00
+  StaticBezier     1,941,509 0.76      90     1.00
 arcLength
-  StaticBezier   355,560,635 0.23      97     1.00
+  StaticBezier   339,069,142 0.76      91     1.00
 ```
 
 > `bezier` refers to the [bezier package](https://www.npmjs.com/package/bezier), StaticBezier is the export of this package.
