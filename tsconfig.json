@@ -76,6 +76,7 @@
     /* Disallow inconsistently-cased references to the same file. */
   },
   "files": [
-    "./src/static-bezier.ts"
+    "./src/static-bezier.ts",
+    "./src/arc-length-helper.ts"
   ]
 }

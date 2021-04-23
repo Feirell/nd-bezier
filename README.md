@@ -137,52 +137,61 @@ more versatile alternative.
 
 ## arc length
 
-The StaticBezier.arcLength is calculated in a closed form which allows a greatly improved performance and robustness but sadly it is also limited by the grade.
-If you need to get the length of an arc for another curve with a higher grade you can use one of the two other options.
+The `StaticBezier.arcLength` is calculated in a closed form which allows a greatly improved performance and robustness but sadly it is also limited by the grade.
+If you need to get the length of an arc for another curve with a higher grade or the length of the offset curve then you can use two provided alternatives.
+
+Those alternative also allow you to do the inverse, to find the t which is a certain arc length distance from the start.
+
+Since those alternatives are only approximations of the actual length you should try different settings for the precision beforehand and compare them with results of very high settings to see how much they differentiate and which settings suit your use case.
+Precision also changes the performance for the creation. So you need to keep a balance.
+
+Both of the following function return a `ArcLengthHelper` which has two methods: 
+
+### ArcLengthHelper
+
+#### `getArcLength(tEnd: number): number`;
+
+This function gets the arc length for the interval 0 to `tEnd`. Be aware that this is an approximation and its quality highly depend on the `precision` value.
+`tEnd` will be clipped to the `[0, 1]` range, so `getArcLength(1)`, `getArcLength(1.5)` and `getArcLength(2)` will all yield the same result.
+
+This function is not iterative and there for has no direct precision control. The performance of this function does not depend on the `precision` only the quality will change with the `precision`.
+
+#### `getTForArcLength(arcLength: number, epsilon?: number): number`;
+
+This function does the inverse as `getArcLength` does. It will only return values in the range of 0 to 1, even when the value is not in that range.
+Check this beforehand by comparing your value with the full arc length by calling `getArcLength(1)`.
+
+This function uses the secant root finding algorithm, and the epsilon is used to stop the iterative approximation when a threshold is reached.
+The resulting t will satisfy the constraint `estArc = getTForArcLength(resultT); estArc is in range [arcLength - epsilon, arcLength + epsilon]`
 
 ### alternatives
 
-Since those alternatives are only approximations of the actual length you should try different settings beforehand and compare them with results of very high settings to see how much they differentiate and which settings suit your use case.
+#### `createArcLengthHelperForBezier(sb: StaticBezier<number, number>, precision: number = 1000): ArcLengthHelper`
 
-#### `arcLengthSubSections(tStart: number, tEnd: number, subSections: number = 10): number`
+> `import {createArcLengthHelperForBezier} from "nd-bezier/lib/arc-length-helper";`
 
-`import {arcLengthSubSections} from 'nd-bezier/lib/arc-length-sub-sections`
+This function creates the `ArcLengthHelper` with the given precision. If your `StaticBezier` has the grade 3 then you should just use the `arcLength` property of the `StaticBezier` itself.
 
-As the name implies this function just iterates over `t` values defined by the `subSections` argument and sums the distances between those points which results in an approximation of the actual length.
+#### `createArcLengthHelperForOffsetBezier(sb: StaticBezier<2, 2> | StaticBezier<3, 2> | StaticBezier<4, 2>, offset: number, precision: number = 1000): ArcLengthHelper`
 
-#### `arcLengthIntegration(tStart: number, tEnd: number, e: number = 18): number`
+> `import {createArcLengthHelperForOffsetBezier} from "nd-bezier/lib/arc-length-helper";`
 
-`import {arcLengthSubSections} from 'nd-bezier/lib/arc-length-sub-sections`
+This function creates the `ArcLengthHelper` with the given precision for the offset bezier, a positive offset is on the left side, a negative is on the right side.
 
-> To use this function you need to have the npm package [sm-integral](https://www.npmjs.com/package/sm-integral) installed
-
-This function also calculates the return value in an iterative fashion, which means that this is an approximation too, but this approximation is based on a similar approach as the arcLength method is.
-The problem why the arcLength method can not be used for all grades is that it is not trivial to calculate the underlying indefinite integral. This is overcome here by the Romberg integration algorithm,
-which the needed package supplies. The parameter `e` controls the resolution for the Romberg algorithm, the higher the number the better the result. Have a look at the documentation of the `sm-integral` package for more information. 
-
-### performance remarks
-
-Since the alternatives are iterative and can be tuned to your desired resolution you can archive different performance results.
-The results of the performance vary greatly with different parameters **and with different control points**, but order of performance does not change in perspective to the quality of the returned value.
-
-The following results are generated with an `e` setting of 4 and `subSections` of 20 which results in usable values.
+### performance of alternatives
 
 ```text
-                           ops/sec  MoE samples relative
+                      ops/sec  MoE samples relative
 arc length, g: 2 d: 2
-  arcLengthSubSections     473,564 1.74      88     1.00
-  arcLengthIntegration     948,399 1.19      90     2.00
-  arcLength            358,696,163 0.77      92   757.44
+  arcLengthHelper  18,403,065 0.79      91     1.00
+  arcLength       349,707,658 0.75      89    19.00
 arc length, g: 3 d: 2
-  arcLengthSubSections     479,027 0.99      92     1.00
-  arcLengthIntegration   2,661,313 0.88      91     5.56
-  arcLength            342,891,843 0.94      93   715.81
+  arcLengthHelper  18,426,303 0.55      90     1.00
+  arcLength       343,809,769 0.58      93    18.66
 arc length, g: 2 d: 3
-  arcLengthSubSections     468,739 1.08      94     1.00
-  arcLengthIntegration     889,273 1.51      92     1.90
-  arcLength            357,867,169 0.83      94   763.47
+  arcLengthHelper  18,382,831 0.75      93     1.00
+  arcLength       352,624,813 0.73      90    19.18
 arc length, g: 3 d: 3
-  arcLengthSubSections     451,675 1.09      89     1.00
-  arcLengthIntegration   2,498,916 1.12      91     5.53
-  arcLength            330,728,946 1.08      89   732.23
+  arcLengthHelper  18,507,694 0.79      92     1.00
+  arcLength       334,707,319 0.81      87    18.08
 ```
