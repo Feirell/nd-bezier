@@ -1,5 +1,9 @@
-import Complex from "linear-quadratic-cubic-eq-solver/cjs/complex";
-import {solveCubicEquation, solveLinearEquation, solveQuadraticEquation} from "linear-quadratic-cubic-eq-solver";
+import {
+  Complex,
+  solveCubicEquation,
+  solveLinearEquation,
+  solveQuadraticEquation
+} from "linear-quadratic-cubic-eq-solver";
 
 /**
  *

@@ -13,13 +13,13 @@
   "author": "Florian Völker <Neirolf2030@web.de>",
   "license": "MIT",
   "dependencies": {
-    "linear-quadratic-cubic-eq-solver": "^0.0.4"
+    "linear-quadratic-cubic-eq-solver": "^1.0.0"
   },
   "devDependencies": {
     "bezier": "^0.1.0",
     "mocha": "^8.3.1",
-    "performance-test-runner": "^0.1.1",
-    "typescript": "^4.2.3"
+    "performance-test-runner": "^0.1.2",
+    "typescript": "4.8.3"
   },
   "files": [
     "lib"

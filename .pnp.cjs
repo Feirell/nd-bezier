@@ -34,10 +34,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./",\
           "packageDependencies": [\
             ["bezier", "npm:0.1.0"],\
-            ["linear-quadratic-cubic-eq-solver", "npm:0.0.4"],\
+            ["linear-quadratic-cubic-eq-solver", "npm:1.0.0"],\
             ["mocha", "npm:8.3.1"],\
-            ["performance-test-runner", "npm:0.1.1"],\
-            ["typescript", "patch:typescript@npm%3A4.2.3#~builtin<compat/typescript>::version=4.2.3&hash=a1c5e5"]\
+            ["performance-test-runner", "npm:0.1.2"],\
+            ["typescript", "patch:typescript@npm%3A4.8.3#~builtin<compat/typescript>::version=4.8.3&hash=a1c5e5"]\
           ],\
           "linkType": "SOFT"\
         }]\
@@ -964,10 +964,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["linear-quadratic-cubic-eq-solver", [\
-        ["npm:0.0.4", {\
-          "packageLocation": "./.yarn/cache/linear-quadratic-cubic-eq-solver-npm-0.0.4-204ab8579a-0ffbe3ad9c.zip/node_modules/linear-quadratic-cubic-eq-solver/",\
+        ["npm:1.0.0", {\
+          "packageLocation": "./.yarn/cache/linear-quadratic-cubic-eq-solver-npm-1.0.0-ed02bfaec1-577412459d.zip/node_modules/linear-quadratic-cubic-eq-solver/",\
           "packageDependencies": [\
-            ["linear-quadratic-cubic-eq-solver", "npm:0.0.4"]\
+            ["linear-quadratic-cubic-eq-solver", "npm:1.0.0"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -1217,10 +1217,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [\
             ["nd-bezier", "workspace:."],\
             ["bezier", "npm:0.1.0"],\
-            ["linear-quadratic-cubic-eq-solver", "npm:0.0.4"],\
+            ["linear-quadratic-cubic-eq-solver", "npm:1.0.0"],\
             ["mocha", "npm:8.3.1"],\
-            ["performance-test-runner", "npm:0.1.1"],\
-            ["typescript", "patch:typescript@npm%3A4.2.3#~builtin<compat/typescript>::version=4.2.3&hash=a1c5e5"]\
+            ["performance-test-runner", "npm:0.1.2"],\
+            ["typescript", "patch:typescript@npm%3A4.8.3#~builtin<compat/typescript>::version=4.8.3&hash=a1c5e5"]\
           ],\
           "linkType": "SOFT"\
         }]\
@@ -1353,10 +1353,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["performance-test-runner", [\
-        ["npm:0.1.1", {\
-          "packageLocation": "./.yarn/cache/performance-test-runner-npm-0.1.1-e3b5f41110-89cae27961.zip/node_modules/performance-test-runner/",\
+        ["npm:0.1.2", {\
+          "packageLocation": "./.yarn/cache/performance-test-runner-npm-0.1.2-76b91315bf-6c1b3e97d6.zip/node_modules/performance-test-runner/",\
           "packageDependencies": [\
-            ["performance-test-runner", "npm:0.1.1"],\
+            ["performance-test-runner", "npm:0.1.2"],\
             ["benchmark", "npm:2.1.4"],\
             ["replace-printer", "npm:1.2.2"]\
           ],\
@@ -1701,10 +1701,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["typescript", [\
-        ["patch:typescript@npm%3A4.2.3#~builtin<compat/typescript>::version=4.2.3&hash=a1c5e5", {\
-          "packageLocation": "./.yarn/cache/typescript-patch-c4355f2ce7-f00e6e6e72.zip/node_modules/typescript/",\
+        ["patch:typescript@npm%3A4.8.3#~builtin<compat/typescript>::version=4.8.3&hash=a1c5e5", {\
+          "packageLocation": "./.yarn/cache/typescript-patch-4d824bf818-2222d2382f.zip/node_modules/typescript/",\
           "packageDependencies": [\
-            ["typescript", "patch:typescript@npm%3A4.2.3#~builtin<compat/typescript>::version=4.2.3&hash=a1c5e5"]\
+            ["typescript", "patch:typescript@npm%3A4.8.3#~builtin<compat/typescript>::version=4.8.3&hash=a1c5e5"]\
           ],\
           "linkType": "HARD"\
         }]\

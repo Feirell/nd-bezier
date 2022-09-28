@@ -801,10 +801,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"linear-quadratic-cubic-eq-solver@npm:^0.0.4":
-  version: 0.0.4
-  resolution: "linear-quadratic-cubic-eq-solver@npm:0.0.4"
-  checksum: 0ffbe3ad9c12a0a67ca237c8d5644c6363026439ba729e143bc48d5ebe3c3325dd9830e42c02acc36a04bb72299a8135321544285d3c4b5328cda58c3d050a9a
+"linear-quadratic-cubic-eq-solver@npm:^1.0.0":
+  version: 1.0.0
+  resolution: "linear-quadratic-cubic-eq-solver@npm:1.0.0"
+  checksum: 577412459d38b49cf2640be7a1758387d35d592e345954d926f69fe60bd89bba5a485d4ec37bf0cdbed40ca9af6f256f614c4ca75c301000e9ea867df10769fc
   languageName: node
   linkType: hard
 
@@ -1043,10 +1043,10 @@ __metadata:
   resolution: "nd-bezier@workspace:."
   dependencies:
     bezier: ^0.1.0
-    linear-quadratic-cubic-eq-solver: ^0.0.4
+    linear-quadratic-cubic-eq-solver: ^1.0.0
     mocha: ^8.3.1
-    performance-test-runner: ^0.1.1
-    typescript: ^4.2.3
+    performance-test-runner: ^0.1.2
+    typescript: 4.8.3
   languageName: unknown
   linkType: soft
 
@@ -1164,13 +1164,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"performance-test-runner@npm:^0.1.1":
-  version: 0.1.1
-  resolution: "performance-test-runner@npm:0.1.1"
+"performance-test-runner@npm:^0.1.2":
+  version: 0.1.2
+  resolution: "performance-test-runner@npm:0.1.2"
   dependencies:
     benchmark: ^2.1.4
     replace-printer: ^1.2.2
-  checksum: 89cae279616326397633a0fb92c9fac31919b36e2201033ee5fbf9fd266de1813f01fd1041912584f6fb27493a0a0b9ae1b9845b3d73f440aac24f8d89fd7c13
+  checksum: 6c1b3e97d60560cae64755b13f2120e781f005dc36cb8e37720d110d2912652d48749a2bc2241eba1c379575dddd1def5f28ca5cff8589d8b9fb8f6b7fce3b27
   languageName: node
   linkType: hard
 
@@ -1467,23 +1467,23 @@ __metadata:
   languageName: node
   linkType: hard
 
-"typescript@npm:^4.2.3":
-  version: 4.2.3
-  resolution: "typescript@npm:4.2.3"
+"typescript@npm:4.8.3":
+  version: 4.8.3
+  resolution: "typescript@npm:4.8.3"
   bin:
     tsc: bin/tsc
     tsserver: bin/tsserver
-  checksum: b4a2020c021211184ac15caf59936b2089c13e79685f340a31aaa839c9de2f73b44a5e3757292de6cdad2ed967aef80d4592161b814cc29c0570f261850c4bca
+  checksum: 8286a5edcaf3d68e65c451aa1e7150ad1cf53ee0813c07ec35b7abdfdb10f355ecaa13c6a226a694ae7a67785fd7eeebf89f845da0b4f7e4a35561ddc459aba0
   languageName: node
   linkType: hard
 
-"typescript@patch:typescript@^4.2.3#~builtin<compat/typescript>":
-  version: 4.2.3
-  resolution: "typescript@patch:typescript@npm%3A4.2.3#~builtin<compat/typescript>::version=4.2.3&hash=a1c5e5"
+"typescript@patch:typescript@4.8.3#~builtin<compat/typescript>":
+  version: 4.8.3
+  resolution: "typescript@patch:typescript@npm%3A4.8.3#~builtin<compat/typescript>::version=4.8.3&hash=a1c5e5"
   bin:
     tsc: bin/tsc
     tsserver: bin/tsserver
-  checksum: f00e6e6e72c950865979d5beb66916c75d92eda09514eb2953828b95505cfd2ef3ae9ac776fdac9f841a9ce67744999b70d23779726e0072656a1841c8080860
+  checksum: 2222d2382fb3146089b1d27ce2b55e9d1f99cc64118f1aba75809b693b856c5d3c324f052f60c75b577947fc538bc1c27bad0eb76cbdba9a63a253489504ba7e
   languageName: node
   linkType: hard
 
