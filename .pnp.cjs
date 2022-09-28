@@ -37,6 +37,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["linear-quadratic-cubic-eq-solver", "npm:1.0.0"],\
             ["mocha", "npm:8.3.1"],\
             ["performance-test-runner", "npm:0.1.2"],\
+            ["prettier", "npm:2.7.1"],\
             ["typescript", "patch:typescript@npm%3A4.8.3#~builtin<compat/typescript>::version=4.8.3&hash=a1c5e5"]\
           ],\
           "linkType": "SOFT"\
@@ -1220,6 +1221,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["linear-quadratic-cubic-eq-solver", "npm:1.0.0"],\
             ["mocha", "npm:8.3.1"],\
             ["performance-test-runner", "npm:0.1.2"],\
+            ["prettier", "npm:2.7.1"],\
             ["typescript", "patch:typescript@npm%3A4.8.3#~builtin<compat/typescript>::version=4.8.3&hash=a1c5e5"]\
           ],\
           "linkType": "SOFT"\
@@ -1377,6 +1379,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/platform-npm-1.3.6-8c3cef9352-6f472a09c6.zip/node_modules/platform/",\
           "packageDependencies": [\
             ["platform", "npm:1.3.6"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["prettier", [\
+        ["npm:2.7.1", {\
+          "packageLocation": "./.yarn/cache/prettier-npm-2.7.1-d1f40f5e1a-55a4409182.zip/node_modules/prettier/",\
+          "packageDependencies": [\
+            ["prettier", "npm:2.7.1"]\
           ],\
           "linkType": "HARD"\
         }]\
