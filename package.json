@@ -1,6 +1,7 @@
 {
   "name": "nd-bezier",
   "version": "3.0.0",
+  "packageManager": "yarn@3.2.3",
   "main": "./lib/static-bezier.js",
   "types": "./lib/static-bezier.d.ts",
   "scripts": {
@@ -11,7 +12,6 @@
   "repository": "https://github.com/Feirell/nd-bezier.git",
   "author": "Florian Völker <Neirolf2030@web.de>",
   "license": "MIT",
-  "private": false,
   "dependencies": {
     "linear-quadratic-cubic-eq-solver": "^0.0.4"
   },
