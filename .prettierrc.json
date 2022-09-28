@@ -1,7 +1,0 @@
-{
-  "printWidth": 100,
-  "quoteProps": "consistent",
-  "arrowParens": "avoid",
-  "bracketSpacing": false,
-  "bracketSameLine": false
-}

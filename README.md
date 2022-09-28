@@ -104,26 +104,26 @@ The result of the latest version (Grade 3, Dimension 2):
                      ops/sec  MoE samples relative
 create
   bezier
-    just prepare  92,759,286 1.12      90     1.68
-    with at call  55,365,772 0.86      90     1.00
+    just prepare 103,499,871 0.34      95     1.68
+    with at call  61,664,485 0.19      96     1.00
   StaticBezier
-    just prepare   3,162,554 0.53      89    17.64
-    with at call     179,252 0.81      87     1.00
+    just prepare   3,584,532 0.38      90    18.57
+    with at call     193,020 1.67      89     1.00
 at
-  bezier         115,819,150 0.72      92     1.00
-  StaticBezier   342,976,610 0.72      91     2.96
+  bezier         124,130,718 0.14      96     1.00
+  StaticBezier   360,891,167 0.19      96     2.91
 findTs
-  StaticBezier     9,536,879 0.80      88     1.00
+  StaticBezier     9,189,329 1.23      95     1.00
 direction
-  StaticBezier   417,530,451 0.73      92     1.00
+  StaticBezier   440,271,266 0.18      91     1.00
 offset point
-  StaticBezier   401,623,435 0.65      87     1.00
+  StaticBezier   435,724,239 0.16      92     1.00
 offset direction
-  StaticBezier    72,949,505 1.16      87     1.00
+  StaticBezier   420,808,509 0.13      96     1.00
 nearestTs
-  StaticBezier     1,941,509 0.76      90     1.00
+  StaticBezier     1,724,496 0.22      95     1.00
 arcLength
-  StaticBezier   339,069,142 0.76      91     1.00
+  StaticBezier   353,168,939 0.19      92     1.00
 ```
 
 > `bezier` refers to the [bezier package](https://www.npmjs.com/package/bezier), StaticBezier is the export of this package.
@@ -184,15 +184,15 @@ This function creates the `ArcLengthHelper` with the given precision for the off
 ```text
                       ops/sec  MoE samples relative
 arc length, g: 2 d: 2
-  arcLengthHelper  18,403,065 0.79      91     1.00
-  arcLength       349,707,658 0.75      89    19.00
+  arcLengthHelper  20,150,675 0.30      92     1.00
+  arcLength       368,602,633 0.13      95    18.29
 arc length, g: 3 d: 2
-  arcLengthHelper  18,426,303 0.55      90     1.00
-  arcLength       343,809,769 0.58      93    18.66
+  arcLengthHelper  20,282,408 0.18      96     1.00
+  arcLength       352,131,394 0.17      97    17.36
 arc length, g: 2 d: 3
-  arcLengthHelper  18,382,831 0.75      93     1.00
-  arcLength       352,624,813 0.73      90    19.18
+  arcLengthHelper  19,968,141 0.60      93     1.00
+  arcLength       367,831,490 0.19      95    18.42
 arc length, g: 3 d: 3
-  arcLengthHelper  18,507,694 0.79      92     1.00
-  arcLength       334,707,319 0.81      87    18.08
+  arcLengthHelper  20,189,512 0.29      94     1.00
+  arcLength       354,856,260 0.21      96    17.58
 ```

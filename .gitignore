@@ -1,7 +1,6 @@
 .idea
 node_modules
 lib
-*.tgz
-tests/lib
+lib-testing
 .yarn/*
 !.yarn/releases

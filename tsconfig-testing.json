@@ -1,0 +1,11 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "outDir": "./lib-testing",
+    "declaration": false
+  },
+  "files": [
+    "./tests/test-arc-length-performance.ts",
+    "./tests/test-performance.ts"
+  ]
+}
