@@ -1,6 +1,7 @@
 # nd-Bézier
 
 [![npm](https://img.shields.io/npm/v/nd-bezier.svg)](https://www.npmjs.com/package/nd-bezier)
+[![types](https://img.shields.io/npm/types/nd-bezier.svg)](https://www.npmjs.com/package/nd-bezier)
 [![GitHub issues](https://img.shields.io/github/issues/Feirell/nd-bezier.svg)](https://github.com/Feirell/nd-bezier/issues)
 
 This package aims to help with the usage of n-dimensional Bézier curves. Those curves are mostly used to model paths or to interpolate between values.
