@@ -1,7 +1,7 @@
 import {
-    deriveCoefficientsUsage,
-    getUsedCoefficients,
-    normalQuadraticCoefficientsUsage
+  deriveCoefficientsUsage,
+  getUsedCoefficients,
+  normalQuadraticCoefficientsUsage
 } from "../polynomial-coefficient-usage";
 import {constructBezierCoefficient} from "../section-constructor/bezier-coefficients";
 import {ID_DISTANCE_POINT, ID_POINTS} from "../ids";
@@ -9,117 +9,117 @@ import {FunctionBodyHandler} from "./function-body-handler";
 import {getPolynomialSolver} from "./polynomial-solver";
 
 export function constructNearestTsBody(grade: number, dimension: number) {
-    let retStr = '';
+  let retStr = "";
 
-    const coeffDef = deriveCoefficientsUsage(normalQuadraticCoefficientsUsage(grade));
+  const coeffDef = deriveCoefficientsUsage(normalQuadraticCoefficientsUsage(grade));
 
-    const usedCoefficients = getUsedCoefficients(grade, coeffDef);
+  const usedCoefficients = getUsedCoefficients(grade, coeffDef);
 
-    retStr += constructBezierCoefficient(grade, dimension, usedCoefficients);
-    retStr += '\n';
+  retStr += constructBezierCoefficient(grade, dimension, usedCoefficients);
+  retStr += "\n";
+
+  for (let d = 0; d < dimension; d++) {
+    retStr += "const adjustedLastCoeff" + d + " = coeff" + d + "_" + (grade - 1) + " - " + ID_DISTANCE_POINT + "[" + d + "];\n";
+  }
+
+  retStr += "\n";
+
+  const resultingGrade = coeffDef.length;
+  for (let g = 0; g < resultingGrade; g++) {
+    const coeffsToUse = coeffDef[resultingGrade - g - 1];
+
+    const definition = "const mergedCoeff" + g + " = ";
+    const definitionSpacer = " ".repeat(definition.length - 3);
+
+    retStr += definition;
 
     for (let d = 0; d < dimension; d++) {
-        retStr += 'const adjustedLastCoeff' + d + ' = coeff' + d + '_' + (grade - 1) + ' - ' + ID_DISTANCE_POINT + '[' + d + '];\n';
-    }
+      if (d > 0)
+        retStr += definitionSpacer + " + ";
 
-    retStr += '\n';
+      let combined = "";
+      for (let i = 0; i < coeffsToUse.length; i++) {
+        if (combined.length > 0)
+          combined += " + ";
 
-    const resultingGrade = coeffDef.length;
-    for (let g = 0; g < resultingGrade; g++) {
-        const coeffsToUse = coeffDef[resultingGrade - g - 1];
+        if (coeffsToUse[i].multiplier != 1)
+          combined += coeffsToUse[i].multiplier;
 
-        const definition = 'const mergedCoeff' + g + ' = ';
-        const definitionSpacer = ' '.repeat(definition.length - 3);
+        const vars = coeffsToUse[i].variables;
 
-        retStr += definition;
+        for (let v = 0; v < vars.length; v++) {
+          if (coeffsToUse[i].multiplier != 1 || v > 0)
+            combined += " * ";
 
-        for (let d = 0; d < dimension; d++) {
-            if (d > 0)
-                retStr += definitionSpacer + ' + ';
+          const coeffGrade = vars[v];
 
-            let combined = '';
-            for (let i = 0; i < coeffsToUse.length; i++) {
-                if (combined.length > 0)
-                    combined += ' + ';
-
-                if (coeffsToUse[i].multiplier != 1)
-                    combined += coeffsToUse[i].multiplier;
-
-                const vars = coeffsToUse[i].variables;
-
-                for (let v = 0; v < vars.length; v++) {
-                    if (coeffsToUse[i].multiplier != 1 || v > 0)
-                        combined += ' * ';
-
-                    const coeffGrade = vars[v];
-
-                    if (coeffGrade == grade - 1)
-                        combined += 'adjustedLastCoeff' + d;
-                    else
-                        combined += 'coeff' + d + '_' + coeffGrade;
-                }
-            }
-
-            if (d == dimension - 1)
-                retStr += combined + ';\n\n';
-            else
-                retStr += combined + '\n';
+          if (coeffGrade == grade - 1)
+            combined += "adjustedLastCoeff" + d;
+          else
+            combined += "coeff" + d + "_" + coeffGrade;
         }
+      }
+
+      if (d == dimension - 1)
+        retStr += combined + ";\n\n";
+      else
+        retStr += combined + "\n";
     }
+  }
 
-    retStr += '\n';
+  retStr += "\n";
 
-    retStr += 'const solutions = cleanSolutions(solvePolynomial(\n';
+  retStr += "const solutions = cleanSolutions(solvePolynomial(\n";
 
-    for (let g = 0; g < resultingGrade; g++) {
-        retStr += '  mergedCoeff' + g;
+  for (let g = 0; g < resultingGrade; g++) {
+    retStr += "  mergedCoeff" + g;
 
-        if (g < resultingGrade - 1) {
-            retStr += ',\n';
-        } else {
-            retStr += '\n';
-        }
+    if (g < resultingGrade - 1) {
+      retStr += ",\n";
+    } else {
+      retStr += "\n";
     }
+  }
 
-    retStr += '));\n\n';
+  retStr += "));\n\n";
 
-    retStr += 'const onlyMinima = [];\n\n';
+  retStr += "const onlyMinima = [];\n\n";
 
-    retStr += 'for (let i = 0; i < solutions.length; i++) {\n';
-    retStr += '  const t = solutions[i];\n';
-    retStr += '  let res = mergedCoeff' + (resultingGrade - 2) + ';\n\n';
+  retStr += "for (let i = 0; i < solutions.length; i++) {\n";
+  retStr += "  const t = solutions[i];\n";
+  retStr += "  let res = mergedCoeff" + (resultingGrade - 2) + ";\n\n";
 
 
-    for (let g = resultingGrade - 3; g >= 0; g--) {
-        // second derivative to check if it is a minima
-        if (resultingGrade - 3 == g)
-            retStr += '  let multipleT = t;\n';
-        else
-            retStr += '  multipleT *= t;\n';
+  for (let g = resultingGrade - 3; g >= 0; g--) {
+    // second derivative to check if it is a minima
+    if (resultingGrade - 3 == g)
+      retStr += "  let multipleT = t;\n";
+    else
+      retStr += "  multipleT *= t;\n";
 
-        const derivativeMult = resultingGrade - g - 1;
-        retStr += '  res += multipleT * mergedCoeff' + g + ' * ' + derivativeMult + ';\n\n';
-    }
+    const derivativeMult = resultingGrade - g - 1;
+    retStr += "  res += multipleT * mergedCoeff" + g + " * " + derivativeMult + ";\n\n";
+  }
 
-    retStr += '  if(res > 0)\n';
-    retStr += '    onlyMinima.push(t);\n';
+  retStr += "  if(res > 0)\n";
+  retStr += "    onlyMinima.push(t);\n";
 
-    retStr += '}\n\n';
+  retStr += "}\n\n";
 
-        retStr += 'return onlyMinima;\n';
+  retStr += "return onlyMinima;\n";
 
-    return retStr;
+  return retStr;
 }
 
 const resultingGrade = (grade: number) => normalQuadraticCoefficientsUsage(grade).length;
 
 export const nearestTsFunction = new FunctionBodyHandler(
-    "nearestTs",
-    (grade: number, dimension: number) => grade + ' ' + dimension,
-    [ID_POINTS, ID_DISTANCE_POINT],
-    (grade, dimension) => constructNearestTsBody(grade, dimension),
-    grade => getPolynomialSolver(resultingGrade(grade) - 1),
-    (grade) => grade == 2 || grade == 3 ? undefined : () => {
-        throw new Error('Can not calculate the nearest t for a grade other than 2 or 3 but ' + grade + ' was supplied.');
-    }
-)
+  "nearestTs",
+  (grade: number, dimension: number) => grade + " " + dimension,
+  [ID_POINTS, ID_DISTANCE_POINT],
+  (grade, dimension) => constructNearestTsBody(grade, dimension),
+  grade => getPolynomialSolver(resultingGrade(grade) - 1),
+  (grade) => grade == 2 || grade == 3 ? undefined : () => {
+    throw new Error("Can not calculate the nearest t for a grade other than 2 or 3 but " + grade + " was supplied.");
+  }
+);

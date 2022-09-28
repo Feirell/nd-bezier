@@ -6,8 +6,10 @@
   "types": "./lib/static-bezier.d.ts",
   "scripts": {
     "build": "tsc",
-    "build-performance": "tsc -p tests/tsconfig-testing.json",
-    "test": "mocha ./tests/test.js"
+    "build-performance": "tsc -p tsconfig-testing.json",
+    "run-performance": "node lib-testing/tests/test-performance.js && node lib-testing/tests/test-arc-length-performance.js",
+    "test": "mocha ./tests/test.js",
+    "lint": "eslint src"
   },
   "repository": "https://github.com/Feirell/nd-bezier.git",
   "author": "Florian Völker <Neirolf2030@web.de>",
@@ -16,10 +18,12 @@
     "linear-quadratic-cubic-eq-solver": "^1.0.0"
   },
   "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^5.38.1",
+    "@typescript-eslint/parser": "^5.38.1",
     "bezier": "^0.1.0",
+    "eslint": "^8.24.0",
     "mocha": "^8.3.1",
     "performance-test-runner": "^0.1.2",
-    "prettier": "^2.7.1",
     "typescript": "4.8.3"
   },
   "files": [

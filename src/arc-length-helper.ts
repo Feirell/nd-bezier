@@ -8,31 +8,31 @@ export interface ArcLengthHelper {
 }
 
 function createArcLengthHelper(speed: (t: number) => number, precision: number): ArcLengthHelper {
-    const alh = new NumericalFunctionIntegration(speed, precision);
+  const alh = new NumericalFunctionIntegration(speed, precision);
 
-    const getArcLength = (tEnd: number) =>
-        alh.getIntegral(tEnd);
+  const getArcLength = (tEnd: number) =>
+    alh.getIntegral(tEnd);
 
-    const getTForArcLength = (arcLength: number, epsilon: number = 1e-5) =>
-        alh.getTForIntegral(arcLength, epsilon);
+  const getTForArcLength = (arcLength: number, epsilon = 1e-5) =>
+    alh.getTForIntegral(arcLength, epsilon);
 
-    return {getArcLength, getTForArcLength};
+  return {getArcLength, getTForArcLength};
 }
 
 const vectorLength = (v: number[]) => {
-    let length = 0;
-    for (let i = 0; i < v.length; i++)
-        length += v[i] * v[i];
+  let length = 0;
+  for (let i = 0; i < v.length; i++)
+    length += v[i] * v[i];
 
-    return Math.sqrt(length);
+  return Math.sqrt(length);
+};
+
+export function createArcLengthHelperForBezier(sb: StaticBezier<number, number>, precision = 1000): ArcLengthHelper {
+  const speed = (t: number) => vectorLength(sb.direction(t));
+  return createArcLengthHelper(speed, precision);
 }
 
-export function createArcLengthHelperForBezier(sb: StaticBezier<number, number>, precision: number = 1000): ArcLengthHelper {
-    const speed = (t: number) => vectorLength(sb.direction(t));
-    return createArcLengthHelper(speed, precision);
-}
-
-export function createArcLengthHelperForOffsetBezier(sb: StaticBezier<2, 2> | StaticBezier<3, 2> | StaticBezier<4, 2>, offset: number, precision: number = 1000): ArcLengthHelper {
-    const speed = (t: number) => vectorLength(sb.offsetDirection(t, offset));
-    return createArcLengthHelper(speed, precision);
+export function createArcLengthHelperForOffsetBezier(sb: StaticBezier<2, 2> | StaticBezier<3, 2> | StaticBezier<4, 2>, offset: number, precision = 1000): ArcLengthHelper {
+  const speed = (t: number) => vectorLength(sb.offsetDirection(t, offset));
+  return createArcLengthHelper(speed, precision);
 }

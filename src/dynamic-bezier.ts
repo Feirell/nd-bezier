@@ -6,8 +6,10 @@ import {offsetPointFunction} from "./body-constructor/offset-bezier-function";
 import {split as splitFnc} from "./split-bezier";
 import {offsetDirectionFunction} from "./body-constructor/offset-direction";
 
-function getPoints<Grade extends number, Dimension extends number>(this: StaticBezier<Grade, Dimension>): Points<Grade, Dimension> {
-    return (this as any).points;
+function getPoints<Grade extends number, Dimension extends number>(this: StaticBezier<Grade, Dimension>) {
+  return (this as unknown as {
+    points: Points<Grade, Dimension>;
+  }).points;
 }
 
 /*
@@ -39,7 +41,9 @@ function setPoints<Grade extends number, Dimension extends number>(this: StaticB
 */
 
 function setPoints<Grade extends number, Dimension extends number>(this: StaticBezier<Grade, Dimension>, points: Points<Grade, Dimension>) {
-    (this as any).points = points;
+  (this as unknown as {
+    points: Points<Grade, Dimension>;
+  }).points = points;
 }
 
 const classCache = new Map<string, DynamicBezierConstructor<number, number>>();
@@ -49,41 +53,51 @@ type DynamicBezierConstructorDef<Grade extends number, Dimension extends number>
 type DynamicBezierDef<Grade extends number, Dimension extends number> = DynamicBezier<Grade, Dimension>;
 
 function split<Grade extends number, Dimension extends number>(this: DynamicBezier<Grade, Dimension>, t: number) {
-    return splitFnc((this as any).points as Points<Grade, Dimension>, t);
+  const points = (this as unknown as {
+    points: Points<Grade, Dimension>;
+  }).points;
+  return splitFnc(points, t);
 }
 
 // TODO rewrite dynamic bezier to not use t grouped coefficients but the old version which had t multipliers and coords just once
 export function getDynamicBezier<Grade extends number, Dimension extends number>(grade: Grade, dimension: Dimension, cleanSolution = true) {
-    const key = grade + ' ' + dimension + ' ' + (cleanSolution ? 0 : 1);
-    const res = classCache.get(key) as undefined | DynamicBezierConstructor<Grade, Dimension>;
+  const key = grade + " " + dimension + " " + (cleanSolution ? 0 : 1);
+  const res = classCache.get(key) as undefined | DynamicBezierConstructor<Grade, Dimension>;
 
-    if (res !== undefined)
-        return res;
+  if (res !== undefined)
+    return res;
 
-    function DynamicBezier(this: DynamicBezierDef<Grade, Dimension>, points: Points<Grade, Dimension>) {
-        (this as any).grade = grade;
-        (this as any).dimension = dimension;
+  function DynamicBezier(this: DynamicBezierDef<Grade, Dimension>, points: Points<Grade, Dimension>) {
+    (this as unknown as {
+      grade: number;
+    }).grade = grade;
 
-        (this as any).setPoints(points);
-    }
+    (this as unknown as {
+      dimension: number;
+    }).dimension = dimension;
 
-    const proto = DynamicBezier.prototype as DynamicBezier<Grade, Dimension>
-    Object.assign(proto, {
-        setPoints: setPoints,
-        getPoints: getPoints,
+    (this as unknown as {
+      setPoints(points: Points<Grade, Dimension>): void;
+    }).setPoints(points);
+  }
 
-        at: atFunction.getDynamicFunction(grade, dimension),
+  const proto = DynamicBezier.prototype as DynamicBezier<Grade, Dimension>;
+  Object.assign(proto, {
+    setPoints: setPoints,
+    getPoints: getPoints,
 
-        direction: directionFunction.getDynamicFunction(grade, dimension),
-        offsetPoint: offsetPointFunction.getDynamicFunction(grade, dimension),
-        offsetDirection: offsetDirectionFunction.getDynamicFunction(grade, dimension),
-        findTs: findTsFunction.getDynamicFunction(grade, dimension, cleanSolution),
-        nearestTs: nearestTsFunction.getDynamicFunction(grade, dimension),
+    at: atFunction.getDynamicFunction(grade, dimension),
 
-        split: split
-    });
+    direction: directionFunction.getDynamicFunction(grade, dimension),
+    offsetPoint: offsetPointFunction.getDynamicFunction(grade, dimension),
+    offsetDirection: offsetDirectionFunction.getDynamicFunction(grade, dimension),
+    findTs: findTsFunction.getDynamicFunction(grade, dimension, cleanSolution),
+    nearestTs: nearestTsFunction.getDynamicFunction(grade, dimension),
 
-    classCache.set(key, DynamicBezier as any);
+    split: split
+  });
 
-    return DynamicBezier as any as DynamicBezierConstructorDef<Grade, Dimension>;
+  classCache.set(key, DynamicBezier as never);
+
+  return DynamicBezier as unknown as DynamicBezierConstructorDef<Grade, Dimension>;
 }

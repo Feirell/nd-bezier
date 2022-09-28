@@ -31,7 +31,7 @@ import {ID_POINTS} from "../ids";
 const cache = new Map<string, ReturnType<typeof getPlaces>>();
 
 // const pointsRegEx = /points\[(\d+)\]\[(\d+)\]/g;
-const pointsRegEx = new RegExp(ID_POINTS + "\\[(\\d+)\\]\\[(\\d+)\\]", 'g');
+const pointsRegEx = new RegExp(ID_POINTS + "\\[(\\d+)\\]\\[(\\d+)\\]", "g");
 
 export type PointsPlaces = (string | { point: number, dimension: number })[];
 
@@ -41,61 +41,61 @@ export type PointsPlaces = (string | { point: number, dimension: number })[];
  * the string will be concatenated with the objects string representation
  */
 export function getPlaces(str: string): PointsPlaces {
-    // looking up cache and returning that value if it was already produced
-    const cacheEntry = cache.get(str);
-    if (cacheEntry)
-        return cacheEntry;
+  // looking up cache and returning that value if it was already produced
+  const cacheEntry = cache.get(str);
+  if (cacheEntry)
+    return cacheEntry;
 
 
-    // searching for all occurrences of the pattern
-    const searchResults = [];
+  // searching for all occurrences of the pattern
+  const searchResults = [];
 
-    let match;
-    while ((match = pointsRegEx.exec(str)) != null)
-        searchResults.push({
-            length: match[0].length,
-            point: parseInt(match[1]),
-            dimension: parseInt(match[2]),
-            start: match.index
-        });
+  let match;
+  while ((match = pointsRegEx.exec(str)) != null)
+    searchResults.push({
+      length: match[0].length,
+      point: parseInt(match[1]),
+      dimension: parseInt(match[2]),
+      start: match.index
+    });
 
-    // assembling those results into the actual return value
-    const result = [];
-    let prevStop = 0;
-    for (const sr of searchResults) {
-        if (sr.start != 0) {
-            result[result.length] = str.slice(prevStop, sr.start);
-        }
-        prevStop = sr.start + sr.length;
-
-        result[result.length] = {
-            point: sr.point,
-            dimension: sr.dimension
-        }
+  // assembling those results into the actual return value
+  const result = [];
+  let prevStop = 0;
+  for (const sr of searchResults) {
+    if (sr.start != 0) {
+      result[result.length] = str.slice(prevStop, sr.start);
     }
+    prevStop = sr.start + sr.length;
 
-    // processing the last entry
-    const strLength = str.length;
-    if (prevStop != strLength)
-        result[result.length] = str.slice(prevStop, strLength);
+    result[result.length] = {
+      point: sr.point,
+      dimension: sr.dimension
+    };
+  }
 
-    // saving the result in the cache
-    cache.set(str, result);
+  // processing the last entry
+  const strLength = str.length;
+  if (prevStop != strLength)
+    result[result.length] = str.slice(prevStop, strLength);
 
-    return result;
+  // saving the result in the cache
+  cache.set(str, result);
+
+  return result;
 }
 
 export function makeSpecific(places: PointsPlaces, points: number[][]) {
-    let newFuncBody = "";
-    for (let i = 0; i < places.length; i++) {
-        // every even element is a string which separates two occurrences of point[p][d]
-        if (i % 2 == 0) {
-            newFuncBody += places[i] as string;
-        } else { // every odd one is an object which has to be replaced by the numeric value in points[p][d] (the function argument)
-            const para = places[i] as { point: number, dimension: number };
-            newFuncBody += '' + points[para.point][para.dimension];
-        }
+  let newFuncBody = "";
+  for (let i = 0; i < places.length; i++) {
+    // every even element is a string which separates two occurrences of point[p][d]
+    if (i % 2 == 0) {
+      newFuncBody += places[i] as string;
+    } else { // every odd one is an object which has to be replaced by the numeric value in points[p][d] (the function argument)
+      const para = places[i] as { point: number, dimension: number };
+      newFuncBody += "" + points[para.point][para.dimension];
     }
+  }
 
-    return newFuncBody;
+  return newFuncBody;
 }

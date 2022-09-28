@@ -1,11 +1,11 @@
-export const ID_POINTS = 'points';
-export const ID_T = 't';
-export const ID_DISTANCE = 'distance';
-export const ID_T_SEARCH_DIMENSION = 'tSearchDimension';
-export const ID_VAL_FOR_SEARCH = 'tSearch';
-export const ID_DISTANCE_POINT = 'distancePoint';
-export const ID_T_START = 'tStart';
-export const ID_T_END = 'tEnd';
+export const ID_POINTS = "points";
+export const ID_T = "t";
+export const ID_DISTANCE = "distance";
+export const ID_T_SEARCH_DIMENSION = "tSearchDimension";
+export const ID_VAL_FOR_SEARCH = "tSearch";
+export const ID_DISTANCE_POINT = "distancePoint";
+export const ID_T_START = "tStart";
+export const ID_T_END = "tEnd";
 
 export type IDS =
     typeof ID_POINTS
